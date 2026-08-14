@@ -11,7 +11,7 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
 
   useEffect(() => {
     if (isOpen) {
-      // Automatically play National Anthem song at full volume on opening! No button needed.
+      // Automatically play Jana Gana Mana full song on open
       playAnthemSynth();
     }
   }, [isOpen]);
@@ -24,7 +24,7 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
 
     let currentPos = hoistPosition;
     const interval = setInterval(() => {
-      currentPos += 4;
+      currentPos += 3;
       setHoistPosition(currentPos);
 
       if (currentPos >= 100) {
@@ -33,8 +33,8 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
         setIsFullyHoisted(true);
         playFanfare();
         confetti({
-          particleCount: 45,
-          spread: 65,
+          particleCount: 60,
+          spread: 80,
           origin: { y: 0.6 },
           colors: ['#D97706', '#FFFFFF', '#15803D']
         });
@@ -53,21 +53,21 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
       position: 'fixed',
       inset: 0,
       zIndex: 200,
-      background: 'rgba(7, 11, 21, 0.95)',
+      background: 'rgba(7, 11, 21, 0.96)',
       backdropFilter: 'blur(16px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '14px'
+      padding: '12px'
     }}>
       <div className="card-dharma" style={{
-        maxWidth: '440px',
+        maxWidth: '480px',
         width: '100%',
         padding: '20px 16px',
         textAlign: 'center',
         position: 'relative',
         borderColor: '#D97706',
-        boxShadow: '0 8px 30px rgba(217, 119, 6, 0.35)'
+        boxShadow: '0 10px 40px rgba(217, 119, 6, 0.4)'
       }}>
         {/* Close Button */}
         <button
@@ -88,75 +88,80 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
           }}
           aria-label="Close modal"
         >
-          <X size={22} />
+          <X size={24} />
         </button>
 
         {/* Header Logo */}
-        <div style={{ marginBottom: '10px' }}>
+        <div style={{ marginBottom: '8px' }}>
           <Gita4YouthLogo size="small" />
         </div>
 
-        <div className="dharma-badge" style={{ marginBottom: '8px' }}>
-          <Sparkles size={13} color="#F59E0B" />
+        <div className="dharma-badge" style={{ marginBottom: '10px' }}>
+          <Sparkles size={14} color="#F59E0B" />
           <span>Har Ghar Tiranga • Swatantrata Mahotsav</span>
         </div>
 
-        {/* Flag Pole Simulation Inside Popup */}
+        {/* PROMINENT GRAND FLAG DISPLAY (60% Larger for Mobile) */}
         <div style={{
           position: 'relative',
           width: '100%',
-          height: '210px',
+          height: '290px',
           display: 'flex',
           justifyContent: 'center',
-          background: 'rgba(7, 11, 21, 0.8)',
-          borderRadius: '12px',
-          border: '1px solid rgba(245, 158, 11, 0.25)',
-          marginBottom: '14px',
-          paddingTop: '10px'
+          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(7, 11, 21, 0.98) 100%)',
+          borderRadius: '14px',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          marginBottom: '16px',
+          paddingTop: '10px',
+          overflow: 'hidden'
         }}>
-          {/* Top Finial */}
+          {/* Top Golden Finial Sphere */}
           <div style={{
             position: 'absolute',
             top: '8px',
-            width: '14px',
-            height: '14px',
+            width: '20px',
+            height: '20px',
             borderRadius: '50%',
             background: '#F59E0B',
-            boxShadow: '0 0 8px #F59E0B',
+            boxShadow: '0 0 12px #F59E0B',
             zIndex: 3
           }} />
 
-          {/* Steel Pole */}
+          {/* Solid Steel Pole */}
           <div style={{
             position: 'absolute',
-            top: '14px',
-            width: '5px',
-            height: '180px',
+            top: '16px',
+            width: '8px',
+            height: '260px',
             background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
-            borderRadius: '3px',
+            borderRadius: '4px',
             zIndex: 1
           }} />
 
-          {/* Flag Fabric Element */}
+          {/* LARGE GRAND TRICOLOR FLAG FABRIC */}
           <div style={{
             position: 'absolute',
-            top: `${150 - (hoistPosition * 1.35)}px`,
-            left: 'calc(50% + 2px)',
-            width: '110px',
-            height: '66px',
+            top: `${210 - (hoistPosition * 1.95)}px`,
+            left: 'calc(50% + 4px)',
+            width: '180px', // 60% Larger!
+            height: '108px', // 60% Larger!
             transition: 'top 0.08s linear',
-            zIndex: 2
+            zIndex: 2,
+            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.6))'
           }}>
             <div style={{
               width: '100%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
-              borderRadius: '0 4px 4px 0',
+              borderRadius: '0 6px 6px 0',
               overflow: 'hidden',
-              boxShadow: '2px 4px 8px rgba(0,0,0,0.5)'
+              boxShadow: '4px 6px 16px rgba(0,0,0,0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
             }}>
+              {/* Saffron Band */}
               <div style={{ flex: 1, background: '#D97706' }} />
+              {/* White Band with Large Ashoka Chakra */}
               <div style={{
                 flex: 1,
                 background: '#FFFFFF',
@@ -164,9 +169,9 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <svg viewBox="0 0 40 40" width="20" height="20" className="animate-chakra-calm">
-                  <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.5" />
-                  <circle cx="20" cy="20" r="3" fill="#1E1B4B" />
+                <svg viewBox="0 0 40 40" width="32" height="32" className="animate-chakra-calm">
+                  <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.6" />
+                  <circle cx="20" cy="20" r="3.5" fill="#1E1B4B" />
                   {Array.from({ length: 24 }).map((_, i) => {
                     const angle = (i * 360) / 24;
                     return (
@@ -177,46 +182,50 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
                         x2={20 + 16 * Math.cos((angle * Math.PI) / 180)}
                         y2={20 + 16 * Math.sin((angle * Math.PI) / 180)}
                         stroke="#1E1B4B"
-                        strokeWidth="0.9"
+                        strokeWidth="1.1"
                       />
                     );
                   })}
                 </svg>
               </div>
+              {/* Green Band */}
               <div style={{ flex: 1, background: '#15803D' }} />
             </div>
           </div>
 
-          {/* Pedestal */}
+          {/* Heavy Pedestal Base */}
           <div style={{
             position: 'absolute',
-            bottom: '6px',
-            width: '100px',
-            height: '14px',
+            bottom: '8px',
+            width: '130px',
+            height: '16px',
             background: '#334155',
-            borderRadius: '3px',
-            zIndex: 3
+            borderRadius: '4px',
+            zIndex: 3,
+            border: '1px solid #64748B'
           }} />
         </div>
 
-        {/* Action Button inside Popup */}
+        {/* Action Button */}
         {!isFullyHoisted ? (
           <button
             onClick={handleHoist}
             disabled={isHoisting}
             className="btn-mobile-primary"
+            style={{ minHeight: '52px', fontSize: '1.05rem' }}
           >
-            <Flag size={20} />
+            <Flag size={22} />
             <span>{isHoisting ? `Hoisting Flag (${hoistPosition}%)...` : 'Pull Rope to Hoist Flag 🇮🇳'}</span>
           </button>
         ) : (
           <button
             onClick={handleGoToQuiz}
             className="btn-mobile-primary"
+            style={{ minHeight: '52px', fontSize: '1.05rem' }}
           >
-            <HelpCircle size={20} />
+            <HelpCircle size={22} />
             <span>Now Play Independence Quiz</span>
-            <ArrowRight size={18} />
+            <ArrowRight size={20} />
           </button>
         )}
 

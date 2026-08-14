@@ -5,7 +5,7 @@ import { Flag, Play, Sparkles, Volume2, RefreshCw, HelpCircle, ArrowRight } from
 import Gita4YouthLogo from './Gita4YouthLogo';
 
 export default function FlagHoister({ setActiveTab }) {
-  const [hoistPosition, setHoistPosition] = useState(0); // 0 to 100
+  const [hoistPosition, setHoistPosition] = useState(0);
   const [isHoisting, setIsHoisting] = useState(false);
   const [isFullyHoisted, setIsFullyHoisted] = useState(false);
   const [isPlayingAnthem, setIsPlayingAnthem] = useState(false);
@@ -19,22 +19,21 @@ export default function FlagHoister({ setActiveTab }) {
     { hi: "विन्ध्य हिमाचल यमुना गंगा", en: "Vindhya Himachala Yamuna Ganga" },
     { hi: "उच्छल जलधि तरंग", en: "Uchchala Jaladhi Taranga" },
     { hi: "तव शुभ नामे जागे", en: "Tava Shubha Name Jage" },
-    { hi: "तव शुभ आशिष मागे", en: "Tava Shubha absolute Gahe" },
+    { hi: "तव शुभ आशिष मागे", en: "Tava Shubha Gatha" },
     { hi: "जन गण मंगल दायक जय हे", en: "Jana Gana Mangala Dayaka Jaya He" },
     { hi: "भारत भाग्य विधाता", en: "Bharata Bhagya Vidhata" },
     { hi: "जय हे, जय हे, जय हे", en: "Jaya He, Jaya He, Jaya He" },
     { hi: "जय जय जय जय हे!", en: "Jaya Jaya Jaya Jaya He!" }
   ];
 
-  // Auto-start anthem audio as soon as component mounts on link open!
   useEffect(() => {
     startAnthem();
   }, []);
 
   const triggerTricolorConfetti = () => {
     confetti({
-      particleCount: 50,
-      spread: 70,
+      particleCount: 60,
+      spread: 80,
       origin: { y: 0.6 },
       colors: ['#D97706', '#FFFFFF', '#15803D']
     });
@@ -57,7 +56,7 @@ export default function FlagHoister({ setActiveTab }) {
         triggerTricolorConfetti();
         startAnthem();
       }
-    }, 30);
+    }, 25);
   };
 
   const startAnthem = () => {
@@ -93,7 +92,7 @@ export default function FlagHoister({ setActiveTab }) {
   return (
     <div className="container-mobile" style={{ maxWidth: '800px', margin: '0 auto' }}>
       
-      {/* Opening Header */}
+      {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '16px' }}>
         <div className="dharma-badge" style={{ marginBottom: '6px' }}>
           <Sparkles size={14} color="#F59E0B" />
@@ -104,68 +103,70 @@ export default function FlagHoister({ setActiveTab }) {
           HOIST THE TRICOLOR FLAG
         </h1>
         <p style={{ color: '#CBD5E1', fontSize: '0.95rem', marginTop: '4px' }}>
-          Pull the rope below to hoist the national flag & play the National Anthem at full sound!
+          Pull the rope below to hoist the national flag & play the National Anthem song at full sound!
         </p>
       </div>
 
       {/* Main Flag Stage */}
       <div className="grid-mobile-single" style={{ gap: '20px' }}>
         
-        {/* Flag Pole Stage */}
+        {/* GRAND FLAG DISPLAY STAGE (60% Larger) */}
         <div className="card-dharma" style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '380px',
+          minHeight: '400px',
           position: 'relative',
           overflow: 'hidden'
         }}>
 
           {/* Flag Pole Container */}
-          <div style={{ position: 'relative', width: '100%', height: '270px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ position: 'relative', width: '100%', height: '300px', display: 'flex', justifyContent: 'center' }}>
             
             {/* Top Finial */}
             <div style={{
               position: 'absolute',
               top: '0',
-              width: '16px',
-              height: '16px',
+              width: '20px',
+              height: '20px',
               borderRadius: '50%',
               background: '#F59E0B',
-              boxShadow: '0 0 10px #F59E0B',
+              boxShadow: '0 0 12px #F59E0B',
               zIndex: 3
             }} />
 
             {/* Steel Pole */}
             <div style={{
               position: 'absolute',
-              top: '8px',
-              width: '6px',
-              height: '250px',
+              top: '10px',
+              width: '8px',
+              height: '280px',
               background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
-              borderRadius: '3px',
+              borderRadius: '4px',
               zIndex: 1
             }} />
 
-            {/* Raised Flag Element */}
+            {/* GRAND TRICOLOR FLAG (190px x 114px) */}
             <div style={{
               position: 'absolute',
-              top: `${210 - (hoistPosition * 2.0)}px`,
-              left: 'calc(50% + 3px)',
-              width: '130px',
-              height: '78px',
+              top: `${230 - (hoistPosition * 2.1)}px`,
+              left: 'calc(50% + 4px)',
+              width: '190px', // 60% Larger!
+              height: '114px', // 60% Larger!
               transition: 'top 0.1s linear',
-              zIndex: 2
+              zIndex: 2,
+              filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.6))'
             }}>
               <div style={{
                 width: '100%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                borderRadius: '0 4px 4px 0',
+                borderRadius: '0 6px 6px 0',
                 overflow: 'hidden',
-                boxShadow: '2px 4px 10px rgba(0,0,0,0.4)'
+                boxShadow: '4px 6px 16px rgba(0,0,0,0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
               }}>
                 <div style={{ flex: 1, background: '#D97706' }} />
                 <div style={{
@@ -175,9 +176,9 @@ export default function FlagHoister({ setActiveTab }) {
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <svg viewBox="0 0 40 40" width="24" height="24" className="animate-chakra-calm">
-                    <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.5" />
-                    <circle cx="20" cy="20" r="3" fill="#1E1B4B" />
+                  <svg viewBox="0 0 40 40" width="34" height="34" className="animate-chakra-calm">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.6" />
+                    <circle cx="20" cy="20" r="3.5" fill="#1E1B4B" />
                     {Array.from({ length: 24 }).map((_, i) => {
                       const angle = (i * 360) / 24;
                       return (
@@ -188,7 +189,7 @@ export default function FlagHoister({ setActiveTab }) {
                           x2={20 + 16 * Math.cos((angle * Math.PI) / 180)}
                           y2={20 + 16 * Math.sin((angle * Math.PI) / 180)}
                           stroke="#1E1B4B"
-                          strokeWidth="0.9"
+                          strokeWidth="1.1"
                         />
                       );
                     })}
@@ -202,11 +203,12 @@ export default function FlagHoister({ setActiveTab }) {
             <div style={{
               position: 'absolute',
               bottom: '0',
-              width: '120px',
+              width: '140px',
               height: '18px',
               background: '#334155',
               borderRadius: '4px',
-              zIndex: 3
+              zIndex: 3,
+              border: '1px solid #64748B'
             }} />
           </div>
 
@@ -217,20 +219,21 @@ export default function FlagHoister({ setActiveTab }) {
                 onClick={handleHoist}
                 disabled={isHoisting}
                 className="btn-mobile-primary"
+                style={{ minHeight: '52px', fontSize: '1.05rem' }}
               >
-                <Flag size={20} />
+                <Flag size={22} />
                 <span>{isHoisting ? `Hoisting Flag (${hoistPosition}%)...` : 'Pull Rope to Hoist Flag 🇮🇳'}</span>
               </button>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-                {/* Celebratory Banner CTA directly to Quiz */}
                 <button
                   onClick={handleGoToQuiz}
                   className="btn-mobile-primary"
+                  style={{ minHeight: '52px', fontSize: '1.05rem' }}
                 >
-                  <HelpCircle size={20} />
+                  <HelpCircle size={22} />
                   <span>Now Take the Independence Quiz</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={20} />
                 </button>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -299,21 +302,21 @@ export default function FlagHoister({ setActiveTab }) {
                 </div>
               ) : (
                 <div style={{ color: '#94A3B8' }}>
-                  <p style={{ fontSize: '0.92rem', marginBottom: '4px' }}>National Anthem song playing at full volume.</p>
+                  <p style={{ fontSize: '0.92rem', marginBottom: '4px' }}>Jana Gana Mana song playing at full volume.</p>
                   <p style={{ fontSize: '0.8rem', color: '#F59E0B' }}>"Jana Gana Mana" • Tagore</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Direct CTA to Quiz */}
           <button
             onClick={handleGoToQuiz}
             className="btn-mobile-primary"
+            style={{ minHeight: '52px', fontSize: '1.05rem' }}
           >
-            <HelpCircle size={20} />
+            <HelpCircle size={22} />
             <span>Go to Independence Quiz</span>
-            <ArrowRight size={18} />
+            <ArrowRight size={20} />
           </button>
         </div>
 
