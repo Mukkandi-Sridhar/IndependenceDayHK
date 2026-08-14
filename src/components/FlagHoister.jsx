@@ -45,6 +45,9 @@ export default function FlagHoister({ setActiveTab }) {
 
   const handleHoist = () => {
     if (isHoisting || isFullyHoisted) return;
+
+    // Explicitly trigger real MP3 music playback on mobile touch event!
+    playAnthemSynth();
     setIsHoisting(true);
 
     let currentPos = hoistPosition;

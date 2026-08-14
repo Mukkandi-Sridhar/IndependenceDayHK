@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { playAnthemSynth, playFanfare } from '../utils/audioSynth';
+import { playAnthemSynth, playFanfare, stopAnthemAudio } from '../utils/audioSynth';
 import confetti from 'canvas-confetti';
 import { Flag, Sparkles, HelpCircle, ArrowRight, X } from 'lucide-react';
 import Gita4YouthLogo from './Gita4YouthLogo';
@@ -12,7 +12,6 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
 
   useEffect(() => {
     if (isOpen) {
-      // Automatically play Jana Gana Mana full song on open
       playAnthemSynth();
     }
   }, [isOpen]);
@@ -33,6 +32,9 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
 
   const handleHoist = () => {
     if (isHoisting || isFullyHoisted) return;
+    
+    // Explicitly trigger real MP3 music playback on mobile touch event!
+    playAnthemSynth();
     setIsHoisting(true);
 
     let currentPos = hoistPosition;

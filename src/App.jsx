@@ -8,10 +8,16 @@ import QuizModule from './components/QuizModule';
 import TirangaStudio from './components/TirangaStudio';
 import TributeWall from './components/TributeWall';
 import Footer from './components/Footer';
+import { initMobileAudio } from './utils/audioSynth';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('flag');
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(true);
+
+  // Initialize & unlock mobile WebKit audio on startup
+  useEffect(() => {
+    initMobileAudio();
+  }, []);
 
   // Smooth scroll to top of page whenever activeTab changes
   const handleTabChange = (tabId) => {
