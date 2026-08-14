@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { playAnthemSynth, playFanfare } from '../utils/audioSynth';
-import { Flag, Play, Sparkles, Volume2, RefreshCw, Compass } from 'lucide-react';
+import { Flag, Play, Sparkles, Volume2, RefreshCw, HelpCircle, ArrowRight } from 'lucide-react';
 import Gita4YouthLogo from './Gita4YouthLogo';
 
 export default function FlagHoister({ setActiveTab }) {
@@ -19,19 +19,22 @@ export default function FlagHoister({ setActiveTab }) {
     { hi: "विन्ध्य हिमाचल यमुना गंगा", en: "Vindhya Himachala Yamuna Ganga" },
     { hi: "उच्छल जलधि तरंग", en: "Uchchala Jaladhi Taranga" },
     { hi: "तव शुभ नामे जागे", en: "Tava Shubha Name Jage" },
-    { hi: "तव शुभ आशिष मागे", en: "Tava Shubha Ashisha Mage" },
-    { hi: "गाहे तव जय गाथा", en: "Gahe Tava Jaya Gatha" },
+    { hi: "तव शुभ आशिष मागे", en: "Tava Shubha absolute Gahe" },
     { hi: "जन गण मंगल दायक जय हे", en: "Jana Gana Mangala Dayaka Jaya He" },
     { hi: "भारत भाग्य विधाता", en: "Bharata Bhagya Vidhata" },
     { hi: "जय हे, जय हे, जय हे", en: "Jaya He, Jaya He, Jaya He" },
     { hi: "जय जय जय जय हे!", en: "Jaya Jaya Jaya Jaya He!" }
   ];
 
+  // Auto-start anthem audio as soon as component mounts on link open!
+  useEffect(() => {
+    startAnthem();
+  }, []);
+
   const triggerTricolorConfetti = () => {
-    // Restrained, dignified confetti
     confetti({
-      particleCount: 40,
-      spread: 60,
+      particleCount: 50,
+      spread: 70,
       origin: { y: 0.6 },
       colors: ['#D97706', '#FFFFFF', '#15803D']
     });
@@ -43,7 +46,7 @@ export default function FlagHoister({ setActiveTab }) {
 
     let currentPos = hoistPosition;
     const interval = setInterval(() => {
-      currentPos += 2;
+      currentPos += 3;
       setHoistPosition(currentPos);
 
       if (currentPos >= 100) {
@@ -54,7 +57,7 @@ export default function FlagHoister({ setActiveTab }) {
         triggerTricolorConfetti();
         startAnthem();
       }
-    }, 35);
+    }, 30);
   };
 
   const startAnthem = () => {
@@ -70,7 +73,7 @@ export default function FlagHoister({ setActiveTab }) {
         clearInterval(lyricInterval);
         setIsPlayingAnthem(false);
       }
-    }, 1800);
+    }, 1700);
 
     playAnthemSynth();
   };
@@ -82,25 +85,30 @@ export default function FlagHoister({ setActiveTab }) {
     setCurrentLyricIndex(-1);
   };
 
+  const handleGoToQuiz = () => {
+    setActiveTab('quiz');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
+
   return (
     <div className="container-mobile" style={{ maxWidth: '800px', margin: '0 auto' }}>
       
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <div className="dharma-badge" style={{ marginBottom: '8px' }}>
+      {/* Opening Header */}
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <div className="dharma-badge" style={{ marginBottom: '6px' }}>
           <Sparkles size={14} color="#F59E0B" />
           <span>Har Ghar Tiranga • Gita4Youth</span>
         </div>
 
         <h1 className="tricolor-gradient-text" style={{ fontSize: 'clamp(1.6rem, 5vw, 2.6rem)', fontWeight: '800', lineHeight: 1.2 }}>
-          NATIONAL FLAG HOIST
+          HOIST THE TRICOLOR FLAG
         </h1>
-        <p style={{ color: '#CBD5E1', fontSize: '0.95rem', marginTop: '6px' }}>
-          Unfurl the national flag with pride and honor the timeless spirit of Swatantrata.
+        <p style={{ color: '#CBD5E1', fontSize: '0.95rem', marginTop: '4px' }}>
+          Pull the rope below to hoist the national flag & play the National Anthem at full sound!
         </p>
       </div>
 
-      {/* Main Single Column Mobile-First Grid */}
+      {/* Main Flag Stage */}
       <div className="grid-mobile-single" style={{ gap: '20px' }}>
         
         {/* Flag Pole Stage */}
@@ -115,7 +123,7 @@ export default function FlagHoister({ setActiveTab }) {
         }}>
 
           {/* Flag Pole Container */}
-          <div style={{ position: 'relative', width: '100%', height: '280px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ position: 'relative', width: '100%', height: '270px', display: 'flex', justifyContent: 'center' }}>
             
             {/* Top Finial */}
             <div style={{
@@ -134,7 +142,7 @@ export default function FlagHoister({ setActiveTab }) {
               position: 'absolute',
               top: '8px',
               width: '6px',
-              height: '260px',
+              height: '250px',
               background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
               borderRadius: '3px',
               zIndex: 1
@@ -143,7 +151,7 @@ export default function FlagHoister({ setActiveTab }) {
             {/* Raised Flag Element */}
             <div style={{
               position: 'absolute',
-              top: `${220 - (hoistPosition * 2.1)}px`, // moves from bottom (220px) to top (10px)
+              top: `${210 - (hoistPosition * 2.0)}px`,
               left: 'calc(50% + 3px)',
               width: '130px',
               height: '78px',
@@ -202,7 +210,7 @@ export default function FlagHoister({ setActiveTab }) {
             }} />
           </div>
 
-          {/* Action Buttons with 48px Touch Targets */}
+          {/* Action Buttons */}
           <div style={{ marginTop: '16px', width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {!isFullyHoisted ? (
               <button
@@ -211,45 +219,57 @@ export default function FlagHoister({ setActiveTab }) {
                 className="btn-mobile-primary"
               >
                 <Flag size={20} />
-                <span>{isHoisting ? `Hoisting Flag (${hoistPosition}%)...` : 'Pull Rope & Hoist Flag 🇮🇳'}</span>
+                <span>{isHoisting ? `Hoisting Flag (${hoistPosition}%)...` : 'Pull Rope to Hoist Flag 🇮🇳'}</span>
               </button>
             ) : (
-              <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+                {/* Celebratory Banner CTA directly to Quiz */}
                 <button
-                  onClick={startAnthem}
-                  className="btn-mobile-secondary"
-                  style={{ flex: 1 }}
+                  onClick={handleGoToQuiz}
+                  className="btn-mobile-primary"
                 >
-                  <Play size={18} />
-                  <span>Replay Anthem</span>
+                  <HelpCircle size={20} />
+                  <span>Now Take the Independence Quiz</span>
+                  <ArrowRight size={18} />
                 </button>
-                <button
-                  onClick={handleReset}
-                  className="btn-mobile-secondary"
-                  style={{ width: '48px', minWidth: '48px', padding: 0 }}
-                  aria-label="Reset Hoisting"
-                >
-                  <RefreshCw size={18} />
-                </button>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    onClick={startAnthem}
+                    className="btn-mobile-secondary"
+                    style={{ flex: 1 }}
+                  >
+                    <Play size={18} />
+                    <span>Replay Song</span>
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    className="btn-mobile-secondary"
+                    style={{ width: '48px', minWidth: '48px', padding: 0 }}
+                    aria-label="Reset Hoisting"
+                  >
+                    <RefreshCw size={18} />
+                  </button>
+                </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Anthem Lyrics & Gita Quote Panel */}
+        {/* Anthem Lyrics & Quick Quiz Redirect Banner */}
         <div className="card-dharma" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Volume2 size={20} color="#F59E0B" />
                 <h3 style={{ fontSize: '1.15rem', color: '#FFF' }}>
-                  National Anthem
+                  National Anthem Song
                 </h3>
               </div>
               <Gita4YouthLogo size="small" showTagline={false} />
             </div>
 
-            {/* Lyrics Synchronized Display */}
+            {/* Lyrics Display */}
             <div style={{
               background: 'rgba(7, 11, 21, 0.8)',
               border: '1px solid rgba(245, 158, 11, 0.2)',
@@ -279,38 +299,22 @@ export default function FlagHoister({ setActiveTab }) {
                 </div>
               ) : (
                 <div style={{ color: '#94A3B8' }}>
-                  <p style={{ fontSize: '0.92rem', marginBottom: '4px' }}>Tap <strong>"Pull Rope & Hoist Flag"</strong> to unfurl the flag and play the National Anthem.</p>
-                  <p style={{ fontSize: '0.8rem', color: '#F59E0B' }}>"Jana Gana Mana" • Composed by Rabindranath Tagore</p>
+                  <p style={{ fontSize: '0.92rem', marginBottom: '4px' }}>National Anthem song playing at full volume.</p>
+                  <p style={{ fontSize: '0.8rem', color: '#F59E0B' }}>"Jana Gana Mana" • Tagore</p>
                 </div>
               )}
             </div>
-
-            {/* Gita Quote */}
-            <div style={{
-              background: 'rgba(217, 119, 6, 0.08)',
-              borderLeft: '3px solid #F59E0B',
-              padding: '12px 14px',
-              borderRadius: '0 8px 8px 0'
-            }}>
-              <p className="font-quote" style={{ fontSize: '0.95rem', color: '#F59E0B', fontStyle: 'italic', marginBottom: '4px' }}>
-                "Whatever action a noble leader performs, common citizens follow. Whatever standards they set, all the world pursues."
-              </p>
-              <p style={{ fontSize: '0.78rem', color: '#94A3B8', fontWeight: '600' }}>
-                — Bhagavad Gita 3.21 | Youth Duty for Nation Building
-              </p>
-            </div>
           </div>
 
-          {/* Quick Actions */}
-          <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button
-              onClick={() => setActiveTab('trail')}
-              className="btn-mobile-primary"
-            >
-              <Compass size={18} />
-              <span>Explore Freedom & Gita Trail</span>
-            </button>
-          </div>
+          {/* Direct CTA to Quiz */}
+          <button
+            onClick={handleGoToQuiz}
+            className="btn-mobile-primary"
+          >
+            <HelpCircle size={20} />
+            <span>Go to Independence Quiz</span>
+            <ArrowRight size={18} />
+          </button>
         </div>
 
       </div>

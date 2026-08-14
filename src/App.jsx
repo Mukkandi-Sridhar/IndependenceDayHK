@@ -11,11 +11,11 @@ import Footer from './components/Footer';
 import { toggleAmbientSound } from './utils/audioSynth';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('quiz');
+  const [activeTab, setActiveTab] = useState('flag'); // Opening Home experience is Flag Hoisting!
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(true);
 
-  // Scroll to absolute top of page whenever activeTab changes
+  // Smooth scroll to top of page whenever activeTab changes
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -39,7 +39,7 @@ export default function App() {
         setAudioEnabled={setAudioEnabled}
       />
 
-      {/* Automatic Welcome & National Anthem Modal with Feature Popups */}
+      {/* Automatic Welcome & National Anthem Modal */}
       <WelcomeAnthemModal
         isOpen={welcomeModalOpen}
         onClose={() => setWelcomeModalOpen(false)}
@@ -48,8 +48,8 @@ export default function App() {
 
       {/* Main Viewport */}
       <main style={{ flex: 1, paddingTop: '12px' }}>
-        {activeTab === 'quiz' && <QuizModule setActiveTab={handleTabChange} />}
         {activeTab === 'flag' && <FlagHoister setActiveTab={handleTabChange} />}
+        {activeTab === 'quiz' && <QuizModule setActiveTab={handleTabChange} />}
         {activeTab === 'trail' && <FreedomTrail />}
         {activeTab === 'studio' && <TirangaStudio />}
         {activeTab === 'tribute' && <TributeWall />}
