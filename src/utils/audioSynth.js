@@ -1,5 +1,6 @@
-// Web Audio API Synthesizer with Instant High-Volume Playback for Jana Gana Mana
+// Real Audio Recording + Web Audio Synthesizer for National Anthem (Jana Gana Mana)
 
+let realAnthemAudio = null;
 let audioCtx = null;
 let bgOscillator = null;
 let bgGainNode = null;
@@ -17,79 +18,59 @@ function getAudioContext() {
   return audioCtx;
 }
 
-// Instant high-volume National Anthem synth playback
+// Play Authentic Real National Anthem Recording (Jana Gana Mana)
 export function playAnthemSynth(onProgress) {
+  try {
+    if (realAnthemAudio) {
+      realAnthemAudio.pause();
+      realAnthemAudio.currentTime = 0;
+    }
+
+    // Initialize Real Audio Player with authentic recording
+    realAnthemAudio = new Audio('/national-anthem.ogg');
+    realAnthemAudio.volume = 1.0; // Full Sound
+
+    const playPromise = realAnthemAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log("Playing Real National Anthem Audio at Full Volume!");
+      }).catch(err => {
+        console.warn("Audio autoplay policy triggered, falling back to Web Audio Synth", err);
+        playFallbackSynth(onProgress);
+      });
+    }
+  } catch (e) {
+    console.error("Audio playback error, using synth fallback", e);
+    playFallbackSynth(onProgress);
+  }
+}
+
+// Web Audio Synth Fallback
+function playFallbackSynth(onProgress) {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  // Key notes of Jana Gana Mana opening melody
-  // C4=261.63, D4=293.66, E4=329.63, F4=349.23, G4=392.00, A4=440.00, B4=493.88, C5=523.25
   const melody = [
-    { note: 261.63, dur: 0.38 }, // Ja-
-    { note: 293.66, dur: 0.38 }, // na
-    { note: 329.63, dur: 0.38 }, // Ga-
-    { note: 329.63, dur: 0.38 }, // na
-    { note: 329.63, dur: 0.38 }, // Ma-
-    { note: 329.63, dur: 0.38 }, // na
-    { note: 329.63, dur: 0.38 }, // A-
-    { note: 329.63, dur: 0.38 }, // dhi-
-    { note: 329.63, dur: 0.38 }, // na-
-    { note: 329.63, dur: 0.38 }, // ya-
-    { note: 329.63, dur: 0.55 }, // ka
-    { note: 329.63, dur: 0.38 }, // Ja-
-    { note: 293.66, dur: 0.38 }, // ya
-    { note: 329.63, dur: 0.38 }, // He
-    { note: 349.23, dur: 0.75 }, // ~
-
-    { note: 329.63, dur: 0.38 }, // Bha-
-    { note: 329.63, dur: 0.38 }, // ra-
-    { note: 329.63, dur: 0.38 }, // ta
-    { note: 293.66, dur: 0.38 }, // Bha-
-    { note: 293.66, dur: 0.38 }, // gya
-    { note: 261.63, dur: 0.38 }, // Vi-
-    { note: 293.66, dur: 0.38 }, // dha-
-    { note: 261.63, dur: 0.75 }, // ta
-
-    { note: 392.00, dur: 0.38 }, // Ja-
-    { note: 392.00, dur: 0.38 }, // ya
-    { note: 392.00, dur: 0.38 }, // He
-    { note: 392.00, dur: 0.38 }, // Ja-
-    { note: 392.00, dur: 0.38 }, // ya
-    { note: 392.00, dur: 0.38 }, // He
-    { note: 392.00, dur: 0.38 }, // Ja-
-    { note: 392.00, dur: 0.38 }, // ya
-    { note: 392.00, dur: 0.55 }, // He
-    { note: 440.00, dur: 0.55 }, // Ja-
-    { note: 493.88, dur: 0.55 }, // ya
-    { note: 523.25, dur: 1.1 }   // Jaya Jaya Jaya He!
+    { note: 261.63, dur: 0.38 }, { note: 293.66, dur: 0.38 }, { note: 329.63, dur: 0.38 },
+    { note: 329.63, dur: 0.38 }, { note: 329.63, dur: 0.38 }, { note: 329.63, dur: 0.38 },
+    { note: 329.63, dur: 0.38 }, { note: 329.63, dur: 0.38 }, { note: 329.63, dur: 0.38 },
+    { note: 329.63, dur: 0.38 }, { note: 329.63, dur: 0.55 }, { note: 329.63, dur: 0.38 },
+    { note: 293.66, dur: 0.38 }, { note: 329.63, dur: 0.38 }, { note: 349.23, dur: 0.75 }
   ];
 
   let currentTime = ctx.currentTime + 0.05;
-
-  melody.forEach((item, index) => {
+  melody.forEach((item) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-
-    osc.type = 'triangle'; // Rich tone
+    osc.type = 'triangle';
     osc.frequency.setValueAtTime(item.note, currentTime);
-
-    // Full volume gain envelope
     gain.gain.setValueAtTime(0, currentTime);
     gain.gain.linearRampToValueAtTime(0.7, currentTime + 0.04);
     gain.gain.exponentialRampToValueAtTime(0.001, currentTime + item.dur - 0.03);
-
     osc.connect(gain);
     gain.connect(ctx.destination);
-
     osc.start(currentTime);
     osc.stop(currentTime + item.dur);
-
-    if (onProgress) {
-      setTimeout(() => {
-        onProgress(index, melody.length);
-      }, (currentTime - ctx.currentTime) * 1000);
-    }
-
     currentTime += item.dur;
   });
 }
