@@ -11,9 +11,19 @@ import Footer from './components/Footer';
 import { toggleAmbientSound } from './utils/audioSynth';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('quiz'); // Default to Quiz as requested!
+  const [activeTab, setActiveTab] = useState('quiz');
   const [audioEnabled, setAudioEnabled] = useState(false);
-  const [welcomeModalOpen, setWelcomeModalOpen] = useState(true); // Automatic Welcome Anthem Modal
+  const [welcomeModalOpen, setWelcomeModalOpen] = useState(true);
+
+  // Scroll to absolute top of page whenever activeTab changes
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeTab]);
 
   useEffect(() => {
     toggleAmbientSound(audioEnabled);
@@ -24,7 +34,7 @@ export default function App() {
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         audioEnabled={audioEnabled}
         setAudioEnabled={setAudioEnabled}
       />
@@ -33,13 +43,13 @@ export default function App() {
       <WelcomeAnthemModal
         isOpen={welcomeModalOpen}
         onClose={() => setWelcomeModalOpen(false)}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
       />
 
       {/* Main Viewport */}
       <main style={{ flex: 1, paddingTop: '12px' }}>
-        {activeTab === 'quiz' && <QuizModule setActiveTab={setActiveTab} />}
-        {activeTab === 'flag' && <FlagHoister setActiveTab={setActiveTab} />}
+        {activeTab === 'quiz' && <QuizModule setActiveTab={handleTabChange} />}
+        {activeTab === 'flag' && <FlagHoister setActiveTab={handleTabChange} />}
         {activeTab === 'trail' && <FreedomTrail />}
         {activeTab === 'studio' && <TirangaStudio />}
         {activeTab === 'tribute' && <TributeWall />}
@@ -48,11 +58,11 @@ export default function App() {
       {/* Mobile Fixed 1-Tap Bottom Navigation Bar */}
       <MobileBottomNav
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
       />
 
       {/* Footer */}
-      <Footer setActiveTab={setActiveTab} />
+      <Footer setActiveTab={handleTabChange} />
     </div>
   );
 }

@@ -336,8 +336,8 @@ export default function QuizModule({ setActiveTab }) {
               className="btn-mobile-primary"
               style={{ marginTop: '10px' }}
             >
-              <Database size={18} />
-              <span>Submit & Save Result</span>
+              <CheckCircle size={18} />
+              <span>Submit My Score</span>
             </button>
           </form>
         </div>
@@ -403,7 +403,7 @@ export default function QuizModule({ setActiveTab }) {
             className="btn-mobile-primary"
             style={{ maxWidth: '600px' }}
           >
-            <span>{currentIndex < QUIZ_QUESTIONS.length - 1 ? 'Next Question' : 'Save Result & Submit'}</span>
+            <span>{currentIndex < QUIZ_QUESTIONS.length - 1 ? 'Next Question' : 'Submit My Quiz'}</span>
             <ArrowRight size={18} />
           </button>
         </div>

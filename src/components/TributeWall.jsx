@@ -119,7 +119,7 @@ export default function TributeWall() {
         </div>
 
         <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.8rem)', color: '#F59E0B', marginBottom: '2px', fontWeight: '800' }}>
-          {totalDiyas.toLocaleString()} DIYAS LIT (DB STORED)
+          {totalDiyas.toLocaleString()} DIYAS LIT FOR INDIA
         </h2>
 
         <button
@@ -189,7 +189,7 @@ export default function TributeWall() {
               className="btn-mobile-primary"
               style={{ marginTop: '4px' }}
             >
-              <span>Submit & Save to Database</span>
+              <span>Submit Tribute & Light Diya</span>
             </button>
           </form>
         </div>
@@ -197,7 +197,7 @@ export default function TributeWall() {
         {/* Live Feed */}
         <div>
           <h3 style={{ fontSize: '1.1rem', color: '#FFF', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sparkles size={16} color="#F59E0B" /> Database Tributes Feed ({tributes.length})
+            <Sparkles size={16} color="#F59E0B" /> Recent Tributes ({tributes.length})
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '420px', overflowY: 'auto' }}>
