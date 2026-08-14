@@ -8,6 +8,7 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
   const [hoistPosition, setHoistPosition] = useState(0);
   const [isHoisting, setIsHoisting] = useState(false);
   const [isFullyHoisted, setIsFullyHoisted] = useState(false);
+  const [showFlowers, setShowFlowers] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -17,6 +18,18 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const flowerTypes = ['🌸', '🌼', '🏵️', '🌺', '🌷', '🌸', '🌼', '🏵️'];
+
+  const triggerFlowersAndConfetti = () => {
+    setShowFlowers(true);
+    confetti({
+      particleCount: 75,
+      spread: 90,
+      origin: { y: 0.5 },
+      colors: ['#D97706', '#FFFFFF', '#15803D', '#F59E0B']
+    });
+  };
 
   const handleHoist = () => {
     if (isHoisting || isFullyHoisted) return;
@@ -32,12 +45,7 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
         setIsHoisting(false);
         setIsFullyHoisted(true);
         playFanfare();
-        confetti({
-          particleCount: 60,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#D97706', '#FFFFFF', '#15803D']
-        });
+        triggerFlowersAndConfetti();
       }
     }, 25);
   };
@@ -101,20 +109,37 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
           <span>Har Ghar Tiranga • Swatantrata Mahotsav</span>
         </div>
 
-        {/* PROMINENT GRAND FLAG DISPLAY (60% Larger for Mobile) */}
+        {/* PROMINENT REALISTIC WAVING FLAG & FLOWER SHOWER CONTAINER */}
         <div style={{
           position: 'relative',
           width: '100%',
           height: '290px',
           display: 'flex',
           justifyContent: 'center',
-          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(7, 11, 21, 0.98) 100%)',
+          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(7, 11, 21, 0.99) 100%)',
           borderRadius: '14px',
           border: '1px solid rgba(245, 158, 11, 0.35)',
           marginBottom: '16px',
           paddingTop: '10px',
           overflow: 'hidden'
         }}>
+
+          {/* FLOWER PETAL SHOWER (PUSHPA VARSHA) */}
+          {showFlowers && Array.from({ length: 14 }).map((_, i) => (
+            <span
+              key={i}
+              className="flower-petal"
+              style={{
+                left: `${(i * 7) + 3}%`,
+                animationDelay: `${(i * 0.22)}s`,
+                animationDuration: `${2.2 + (i % 3) * 0.4}s`,
+                fontSize: `${16 + (i % 4) * 4}px`
+              }}
+            >
+              {flowerTypes[i % flowerTypes.length]}
+            </span>
+          ))}
+
           {/* Top Golden Finial Sphere */}
           <div style={{
             position: 'absolute',
@@ -127,41 +152,73 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
             zIndex: 3
           }} />
 
-          {/* Solid Steel Pole */}
+          {/* Pulley Wheel */}
           <div style={{
             position: 'absolute',
             top: '16px',
+            width: '14px',
+            height: '14px',
+            borderRadius: '50%',
+            border: '2px solid #F59E0B',
+            zIndex: 3
+          }} />
+
+          {/* Steel Pole */}
+          <div style={{
+            position: 'absolute',
+            top: '18px',
             width: '8px',
-            height: '260px',
+            height: '255px',
             background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
             borderRadius: '4px',
             zIndex: 1
           }} />
 
-          {/* LARGE GRAND TRICOLOR FLAG FABRIC */}
+          {/* Visible Pulley Ropes */}
           <div style={{
             position: 'absolute',
-            top: `${210 - (hoistPosition * 1.95)}px`,
+            top: '24px',
+            left: 'calc(50% - 6px)',
+            width: '2px',
+            height: '240px',
+            background: 'rgba(245, 158, 11, 0.6)',
+            zIndex: 2
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '24px',
             left: 'calc(50% + 4px)',
-            width: '180px', // 60% Larger!
-            height: '108px', // 60% Larger!
+            width: '2px',
+            height: '240px',
+            background: 'rgba(245, 158, 11, 0.6)',
+            zIndex: 2
+          }} />
+
+          {/* REALISTIC WAVING TRICOLOR FLAG FABRIC */}
+          <div style={{
+            position: 'absolute',
+            top: `${200 - (hoistPosition * 1.85)}px`,
+            left: 'calc(50% + 5px)',
+            width: '190px',
+            height: '114px',
             transition: 'top 0.08s linear',
-            zIndex: 2,
-            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.6))'
+            zIndex: 4,
+            filter: 'drop-shadow(2px 6px 14px rgba(0,0,0,0.65))'
           }}>
-            <div style={{
+            {/* Waving Fabric Wrapper */}
+            <div className="flag-wave-animated" style={{
               width: '100%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
               borderRadius: '0 6px 6px 0',
               overflow: 'hidden',
-              boxShadow: '4px 6px 16px rgba(0,0,0,0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.3)'
+              boxShadow: '4px 6px 18px rgba(0,0,0,0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.35)'
             }}>
               {/* Saffron Band */}
               <div style={{ flex: 1, background: '#D97706' }} />
-              {/* White Band with Large Ashoka Chakra */}
+              {/* White Band with Ashoka Chakra */}
               <div style={{
                 flex: 1,
                 background: '#FFFFFF',
@@ -169,7 +226,7 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <svg viewBox="0 0 40 40" width="32" height="32" className="animate-chakra-calm">
+                <svg viewBox="0 0 40 40" width="34" height="34" className="animate-chakra-calm">
                   <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.6" />
                   <circle cx="20" cy="20" r="3.5" fill="#1E1B4B" />
                   {Array.from({ length: 24 }).map((_, i) => {
@@ -191,13 +248,33 @@ export default function WelcomeAnthemModal({ isOpen, onClose, setActiveTab }) {
               {/* Green Band */}
               <div style={{ flex: 1, background: '#15803D' }} />
             </div>
+
+            {/* Rope Ties to Pole */}
+            <div style={{
+              position: 'absolute',
+              top: '4px',
+              left: '-6px',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: '#F59E0B'
+            }} />
+            <div style={{
+              position: 'absolute',
+              bottom: '4px',
+              left: '-6px',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: '#F59E0B'
+            }} />
           </div>
 
           {/* Heavy Pedestal Base */}
           <div style={{
             position: 'absolute',
             bottom: '8px',
-            width: '130px',
+            width: '140px',
             height: '16px',
             background: '#334155',
             borderRadius: '4px',

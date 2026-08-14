@@ -10,6 +10,7 @@ export default function FlagHoister({ setActiveTab }) {
   const [isFullyHoisted, setIsFullyHoisted] = useState(false);
   const [isPlayingAnthem, setIsPlayingAnthem] = useState(false);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(-1);
+  const [showFlowers, setShowFlowers] = useState(false);
 
   const anthemLyrics = [
     { hi: "जन गण मन अधिनायक जय हे", en: "Jana Gana Mana Adhinayaka Jaya He" },
@@ -26,16 +27,19 @@ export default function FlagHoister({ setActiveTab }) {
     { hi: "जय जय जय जय हे!", en: "Jaya Jaya Jaya Jaya He!" }
   ];
 
+  const flowerTypes = ['🌸', '🌼', '🏵️', '🌺', '🌷', '🌸', '🌼', '🏵️'];
+
   useEffect(() => {
     startAnthem();
   }, []);
 
-  const triggerTricolorConfetti = () => {
+  const triggerFlowersAndConfetti = () => {
+    setShowFlowers(true);
     confetti({
-      particleCount: 60,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#D97706', '#FFFFFF', '#15803D']
+      particleCount: 75,
+      spread: 90,
+      origin: { y: 0.5 },
+      colors: ['#D97706', '#FFFFFF', '#15803D', '#F59E0B']
     });
   };
 
@@ -53,7 +57,7 @@ export default function FlagHoister({ setActiveTab }) {
         setIsHoisting(false);
         setIsFullyHoisted(true);
         playFanfare();
-        triggerTricolorConfetti();
+        triggerFlowersAndConfetti();
         startAnthem();
       }
     }, 25);
@@ -82,6 +86,7 @@ export default function FlagHoister({ setActiveTab }) {
     setIsFullyHoisted(false);
     setIsPlayingAnthem(false);
     setCurrentLyricIndex(-1);
+    setShowFlowers(false);
   };
 
   const handleGoToQuiz = () => {
@@ -110,21 +115,37 @@ export default function FlagHoister({ setActiveTab }) {
       {/* Main Flag Stage */}
       <div className="grid-mobile-single" style={{ gap: '20px' }}>
         
-        {/* GRAND FLAG DISPLAY STAGE (60% Larger) */}
+        {/* GRAND REALISTIC WAVING FLAG DISPLAY STAGE */}
         <div className="card-dharma" style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '400px',
+          minHeight: '410px',
           position: 'relative',
           overflow: 'hidden'
         }}>
 
+          {/* FLOWER PETAL SHOWER (PUSHPA VARSHA) */}
+          {showFlowers && Array.from({ length: 16 }).map((_, i) => (
+            <span
+              key={i}
+              className="flower-petal"
+              style={{
+                left: `${(i * 6) + 2}%`,
+                animationDelay: `${(i * 0.2)}s`,
+                animationDuration: `${2.2 + (i % 3) * 0.4}s`,
+                fontSize: `${18 + (i % 4) * 4}px`
+              }}
+            >
+              {flowerTypes[i % flowerTypes.length]}
+            </span>
+          ))}
+
           {/* Flag Pole Container */}
-          <div style={{ position: 'relative', width: '100%', height: '300px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ position: 'relative', width: '100%', height: '310px', display: 'flex', justifyContent: 'center' }}>
             
-            {/* Top Finial */}
+            {/* Top Golden Finial Sphere */}
             <div style={{
               position: 'absolute',
               top: '0',
@@ -136,37 +157,69 @@ export default function FlagHoister({ setActiveTab }) {
               zIndex: 3
             }} />
 
-            {/* Steel Pole */}
+            {/* Pulley Wheel */}
             <div style={{
               position: 'absolute',
               top: '10px',
+              width: '14px',
+              height: '14px',
+              borderRadius: '50%',
+              border: '2px solid #F59E0B',
+              zIndex: 3
+            }} />
+
+            {/* Steel Pole */}
+            <div style={{
+              position: 'absolute',
+              top: '12px',
               width: '8px',
-              height: '280px',
+              height: '285px',
               background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
               borderRadius: '4px',
               zIndex: 1
             }} />
 
-            {/* GRAND TRICOLOR FLAG (190px x 114px) */}
+            {/* Visible Pulley Ropes */}
             <div style={{
               position: 'absolute',
-              top: `${230 - (hoistPosition * 2.1)}px`,
+              top: '20px',
+              left: 'calc(50% - 6px)',
+              width: '2px',
+              height: '270px',
+              background: 'rgba(245, 158, 11, 0.6)',
+              zIndex: 2
+            }} />
+            <div style={{
+              position: 'absolute',
+              top: '20px',
               left: 'calc(50% + 4px)',
-              width: '190px', // 60% Larger!
-              height: '114px', // 60% Larger!
+              width: '2px',
+              height: '270px',
+              background: 'rgba(245, 158, 11, 0.6)',
+              zIndex: 2
+            }} />
+
+            {/* GRAND REALISTIC WAVING TRICOLOR FLAG */}
+            <div style={{
+              position: 'absolute',
+              top: `${225 - (hoistPosition * 2.1)}px`,
+              left: 'calc(50% + 5px)',
+              width: '190px',
+              height: '114px',
               transition: 'top 0.1s linear',
-              zIndex: 2,
-              filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.6))'
+              zIndex: 4,
+              filter: 'drop-shadow(2px 6px 14px rgba(0,0,0,0.65))'
             }}>
-              <div style={{
+              {/* Waving Fabric Wrapper */}
+              <div className="flag-wave-animated" style={{
                 width: '100%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: '0 6px 6px 0',
                 overflow: 'hidden',
-                boxShadow: '4px 6px 16px rgba(0,0,0,0.6)',
-                border: '1px solid rgba(255, 255, 255, 0.3)'
+                boxShadow: '4px 6px 18px rgba(0,0,0,0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.35)'
               }}>
                 <div style={{ flex: 1, background: '#D97706' }} />
                 <div style={{
@@ -197,6 +250,26 @@ export default function FlagHoister({ setActiveTab }) {
                 </div>
                 <div style={{ flex: 1, background: '#15803D' }} />
               </div>
+
+              {/* Rope Ties to Pole */}
+              <div style={{
+                position: 'absolute',
+                top: '4px',
+                left: '-6px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: '#F59E0B'
+              }} />
+              <div style={{
+                position: 'absolute',
+                bottom: '4px',
+                left: '-6px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: '#F59E0B'
+              }} />
             </div>
 
             {/* Base Pedestal */}
