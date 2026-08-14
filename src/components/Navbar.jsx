@@ -6,11 +6,11 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'flag', label: 'Flag Hoist', icon: Flag },
-    { id: 'trail', label: 'Freedom & Gita Trail', icon: Compass },
-    { id: 'quiz', label: 'Patriot Quiz', icon: HelpCircle },
-    { id: 'studio', label: 'Tiranga Studio', icon: Image },
-    { id: 'tribute', label: 'Diya Wall', icon: Flame },
+    { id: 'quiz', label: 'Independence Quiz', icon: HelpCircle },
+    { id: 'flag', label: 'Flag Hoisting', icon: Flag },
+    { id: 'trail', label: 'Freedom Fighters', icon: Compass },
+    { id: 'studio', label: 'Photo Frames', icon: Image },
+    { id: 'tribute', label: 'Diya Tributes', icon: Flame },
   ];
 
   return (
@@ -18,7 +18,7 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(11, 15, 25, 0.95)',
+      background: 'rgba(11, 15, 25, 0.96)',
       backdropFilter: 'blur(16px)',
       borderBottom: '1px solid rgba(245, 158, 11, 0.2)',
       padding: '10px 16px'
@@ -32,7 +32,7 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
         width: '100%'
       }}>
         {/* Brand Logo */}
-        <div onClick={() => { setActiveTab('flag'); setMobileMenuOpen(false); }} style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}>
+        <div onClick={() => { setActiveTab('quiz'); setMobileMenuOpen(false); }} style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}>
           <Gita4YouthLogo size="small" />
         </div>
 
@@ -92,7 +92,7 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
           >
             {audioEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             <span className="sm-inline" style={{ display: 'none' }}>
-              {audioEnabled ? 'Audio ON' : 'Audio OFF'}
+              {audioEnabled ? 'Sound ON' : 'Sound OFF'}
             </span>
           </button>
 

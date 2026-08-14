@@ -5,9 +5,9 @@ export default function MobileBottomNav({ activeTab, setActiveTab }) {
   const tabs = [
     { id: 'quiz', label: 'Quiz', icon: HelpCircle, isFeatured: true },
     { id: 'flag', label: 'Flag', icon: Flag },
-    { id: 'trail', label: 'Trail', icon: Compass },
-    { id: 'studio', label: 'Studio', icon: Image },
-    { id: 'tribute', label: 'Diya', icon: Flame },
+    { id: 'trail', label: 'Heroes', icon: Compass },
+    { id: 'studio', label: 'Frames', icon: Image },
+    { id: 'tribute', label: 'Diyas', icon: Flame },
   ];
 
   return (

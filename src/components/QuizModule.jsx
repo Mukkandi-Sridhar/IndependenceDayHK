@@ -12,16 +12,13 @@ export default function QuizModule({ setActiveTab }) {
   const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   
-  // Step state: 'quiz' | 'form' | 'results'
   const [quizStep, setQuizStep] = useState('quiz');
 
-  // Form Inputs
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
   const [userPlace, setUserPlace] = useState('');
   const [isGita4YouthMember, setIsGita4YouthMember] = useState('Yes');
 
-  // Database State
   const [highScore, setHighScore] = useState(0);
   const [dbSubmissions, setDbSubmissions] = useState([]);
 
@@ -53,7 +50,6 @@ export default function QuizModule({ setActiveTab }) {
       setShowExplanation(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Questions finished -> Move to User Details Form step
       setQuizStep('form');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -71,7 +67,7 @@ export default function QuizModule({ setActiveTab }) {
     e.preventDefault();
     if (!userName.trim() || !userPhone.trim() || !userPlace.trim()) return;
 
-    const badge = score >= 80 ? 'Veer Swatantra Sainik Honor' : score >= 50 ? 'Karmayogi Youth Honor' : 'Freedom Explorer';
+    const badge = score >= 80 ? 'Freedom Hero Honor' : score >= 50 ? 'Knowledge Seeker Honor' : 'Young Patriot';
 
     const userData = {
       name: userName.trim(),
@@ -83,7 +79,6 @@ export default function QuizModule({ setActiveTab }) {
       badge: badge
     };
 
-    // Save submission directly to Firebase Cloud Firestore (gita4youth-25579)
     const updatedDb = await dbService.saveQuizSubmission(userData);
     setDbSubmissions(updatedDb);
     setHighScore(dbService.getHighScore());
@@ -114,14 +109,14 @@ export default function QuizModule({ setActiveTab }) {
       <div style={{ textAlign: 'center', marginBottom: '16px' }}>
         <div className="dharma-badge" style={{ marginBottom: '6px' }}>
           <HelpCircle size={14} color="#F59E0B" />
-          <span>Patriot Trivia Challenge</span>
+          <span>Test Your Knowledge</span>
         </div>
         <h1 className="tricolor-gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: '800' }}>
-          PATRIOT TRIVIA QUIZ
+          INDEPENDENCE DAY QUIZ
         </h1>
         {highScore > 0 && (
           <p style={{ color: '#F59E0B', fontSize: '0.82rem', fontWeight: '600', marginTop: '2px' }}>
-            🏆 DB High Score: {highScore} pts
+            🏆 High Score: {highScore} pts
           </p>
         )}
       </div>
@@ -131,7 +126,7 @@ export default function QuizModule({ setActiveTab }) {
         <div className="card-dharma" style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
             <span style={{ color: '#F59E0B', fontSize: '0.85rem', fontWeight: '700' }}>
-              Q{currentIndex + 1} of {QUIZ_QUESTIONS.length}
+              Question {currentIndex + 1} of {QUIZ_QUESTIONS.length}
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(217, 119, 6, 0.12)', padding: '4px 10px', borderRadius: '14px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
               <Trophy size={14} color="#F59E0B" />
@@ -141,7 +136,6 @@ export default function QuizModule({ setActiveTab }) {
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', marginBottom: '16px', overflow: 'hidden' }}>
             <div style={{
               width: `${((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100}%`,
@@ -221,7 +215,7 @@ export default function QuizModule({ setActiveTab }) {
               marginTop: '12px'
             }}>
               <p style={{ color: '#F59E0B', fontSize: '0.78rem', fontWeight: '700', textTransform: 'uppercase', marginBottom: '2px' }}>
-                Insight:
+                Explanation:
               </p>
               <p style={{ color: '#E2E8F0', fontSize: '0.88rem', lineHeight: '1.4' }}>
                 {currentQ.explanation}
@@ -239,15 +233,14 @@ export default function QuizModule({ setActiveTab }) {
               <Gita4YouthLogo size="small" />
             </div>
             <h2 style={{ fontSize: '1.35rem', color: '#FFF', fontWeight: '700' }}>
-              Submit Your Quiz Score to Database
+              Save Your Score & Details
             </h2>
             <p style={{ color: '#F59E0B', fontSize: '0.92rem', fontWeight: '600', marginTop: '4px' }}>
-              Score Earned: {score} / {QUIZ_QUESTIONS.length * 10} pts
+              Your Quiz Score: {score} / {QUIZ_QUESTIONS.length * 10} pts
             </p>
           </div>
 
           <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Full Name */}
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.82rem', fontWeight: '600', marginBottom: '4px' }}>
                 Full Name: *
@@ -267,7 +260,6 @@ export default function QuizModule({ setActiveTab }) {
               </div>
             </div>
 
-            {/* Phone Number */}
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.82rem', fontWeight: '600', marginBottom: '4px' }}>
                 Phone Number: *
@@ -287,10 +279,9 @@ export default function QuizModule({ setActiveTab }) {
               </div>
             </div>
 
-            {/* Place / City */}
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.82rem', fontWeight: '600', marginBottom: '4px' }}>
-                Place / City: *
+                City / Place: *
               </label>
               <div style={{ position: 'relative' }}>
                 <input
@@ -307,7 +298,6 @@ export default function QuizModule({ setActiveTab }) {
               </div>
             </div>
 
-            {/* Are you in Gita4Youth? */}
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.82rem', fontWeight: '600', marginBottom: '6px' }}>
                 Are you part of Gita4Youth? *
@@ -347,7 +337,7 @@ export default function QuizModule({ setActiveTab }) {
               style={{ marginTop: '10px' }}
             >
               <Database size={18} />
-              <span>Submit to Database</span>
+              <span>Submit & Save Result</span>
             </button>
           </form>
         </div>
@@ -359,11 +349,11 @@ export default function QuizModule({ setActiveTab }) {
           <Trophy size={52} color="#F59E0B" style={{ margin: '0 auto 10px' }} />
 
           <h2 className="tricolor-gradient-text" style={{ fontSize: '1.7rem', fontWeight: '800', marginBottom: '4px' }}>
-            QUIZ SUBMITTED TO DB!
+            QUIZ COMPLETED!
           </h2>
 
           <p style={{ color: '#CBD5E1', fontSize: '1rem', marginBottom: '16px' }}>
-            Congratulations <strong>{userName}</strong>! You scored <strong style={{ color: '#F59E0B', fontSize: '1.2rem' }}>{score}</strong> pts.
+            Great job <strong>{userName}</strong>! You scored <strong style={{ color: '#F59E0B', fontSize: '1.2rem' }}>{score}</strong> points.
           </p>
 
           <div style={{
@@ -383,32 +373,8 @@ export default function QuizModule({ setActiveTab }) {
               <div><strong style={{ color: '#94A3B8' }}>Phone:</strong> {userPhone}</div>
               <div><strong style={{ color: '#94A3B8' }}>Place:</strong> {userPlace}</div>
               <div><strong style={{ color: '#94A3B8' }}>Gita4Youth Member:</strong> <span style={{ color: '#F59E0B', fontWeight: '700' }}>{isGita4YouthMember}</span></div>
-              <div><strong style={{ color: '#94A3B8' }}>Honor Earned:</strong> <span style={{ color: '#22C55E', fontWeight: '700' }}>{score >= 80 ? 'Veer Swatantra Sainik' : score >= 50 ? 'Karmayogi Youth' : 'Freedom Explorer'}</span></div>
             </div>
           </div>
-
-          {/* Database Log Table / Cards */}
-          {dbSubmissions.length > 0 && (
-            <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#F59E0B', fontSize: '0.88rem', fontWeight: '700', marginBottom: '8px' }}>
-                <Database size={16} /> <span>Database Submissions Record ({dbSubmissions.length})</span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '180px', overflowY: 'auto' }}>
-                {dbSubmissions.map((sub) => (
-                  <div key={sub.id} style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '10px 12px', fontSize: '0.8rem', color: '#CBD5E1' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-                      <strong style={{ color: '#FFF' }}>{sub.name}</strong>
-                      <span style={{ color: '#F59E0B', fontWeight: '700' }}>{sub.score} pts</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94A3B8', fontSize: '0.75rem' }}>
-                      <span>📍 {sub.place} | 📞 {sub.phone}</span>
-                      <span>G4Y Member: {sub.isGita4YouthMember}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <button
@@ -416,7 +382,7 @@ export default function QuizModule({ setActiveTab }) {
               className="btn-mobile-primary"
             >
               <RefreshCw size={18} />
-              <span>Take Quiz Again</span>
+              <span>Play Quiz Again</span>
             </button>
             <button
               onClick={() => setActiveTab('tribute')}
@@ -429,7 +395,7 @@ export default function QuizModule({ setActiveTab }) {
         </div>
       )}
 
-      {/* Sticky Bottom Viewport Pinned 'Next' Button during Quiz */}
+      {/* Sticky Bottom Viewport Pinned 'Next' Button */}
       {quizStep === 'quiz' && showExplanation && (
         <div className="sticky-bottom-bar" style={{ bottom: '56px' }}>
           <button
@@ -437,7 +403,7 @@ export default function QuizModule({ setActiveTab }) {
             className="btn-mobile-primary"
             style={{ maxWidth: '600px' }}
           >
-            <span>{currentIndex < QUIZ_QUESTIONS.length - 1 ? 'Next Question' : 'Enter Details & Submit to DB'}</span>
+            <span>{currentIndex < QUIZ_QUESTIONS.length - 1 ? 'Next Question' : 'Save Result & Submit'}</span>
             <ArrowRight size={18} />
           </button>
         </div>
