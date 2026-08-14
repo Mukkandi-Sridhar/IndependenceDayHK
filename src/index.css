@@ -249,13 +249,13 @@ input:focus, textarea:focus, select:focus {
     transform: perspective(600px) rotateY(0deg) skewY(0deg);
   }
   25% {
-    transform: perspective(600px) rotateY(12deg) skewY(-2deg);
+    transform: perspective(600px) rotateY(10deg) skewY(-1.5deg);
   }
   50% {
     transform: perspective(600px) rotateY(0deg) skewY(1deg);
   }
   75% {
-    transform: perspective(600px) rotateY(-10deg) skewY(2deg);
+    transform: perspective(600px) rotateY(-8deg) skewY(1.5deg);
   }
   100% {
     transform: perspective(600px) rotateY(0deg) skewY(0deg);
@@ -267,24 +267,35 @@ input:focus, textarea:focus, select:focus {
   transform-origin: left center;
 }
 
-/* FLOWER PETAL SHOWER ANIMATION (PUSHPA VARSHA) */
-@keyframes flowerRain {
+/* FULL-SCREEN ABUNDANT FLOWER PETAL SHOWER (PUSHPA VARSHA) */
+@keyframes fullScreenFlowerRain {
   0% {
-    transform: translateY(-20px) rotate(0deg) scale(0.8);
+    transform: translateY(-40px) rotate(0deg) scale(0.7);
     opacity: 1;
   }
+  85% {
+    opacity: 0.9;
+  }
   100% {
-    transform: translateY(320px) rotate(360deg) scale(1.2);
+    transform: translateY(105vh) rotate(540deg) scale(1.3);
     opacity: 0;
   }
 }
 
-.flower-petal {
-  position: absolute;
-  top: -20px;
+.full-screen-flower-container {
+  position: fixed;
+  inset: 0;
   pointer-events: none;
-  z-index: 10;
-  animation: flowerRain 2.8s linear infinite;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.full-screen-flower {
+  position: absolute;
+  top: -40px;
+  pointer-events: none;
+  animation: fullScreenFlowerRain linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 /* Calm Chakra Rotation */
