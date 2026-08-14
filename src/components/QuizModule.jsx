@@ -114,11 +114,6 @@ export default function QuizModule({ setActiveTab }) {
         <h1 className="tricolor-gradient-text" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: '800' }}>
           INDEPENDENCE DAY QUIZ
         </h1>
-        {highScore > 0 && (
-          <p style={{ color: '#F59E0B', fontSize: '0.82rem', fontWeight: '600', marginTop: '2px' }}>
-            🏆 High Score: {highScore} pts
-          </p>
-        )}
       </div>
 
       {/* STEP 1: QUIZ QUESTIONS */}
