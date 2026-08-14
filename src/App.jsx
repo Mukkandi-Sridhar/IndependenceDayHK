@@ -8,11 +8,9 @@ import QuizModule from './components/QuizModule';
 import TirangaStudio from './components/TirangaStudio';
 import TributeWall from './components/TributeWall';
 import Footer from './components/Footer';
-import { toggleAmbientSound } from './utils/audioSynth';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('flag'); // Opening Home experience is Flag Hoisting!
-  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [activeTab, setActiveTab] = useState('flag');
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(true);
 
   // Smooth scroll to top of page whenever activeTab changes
@@ -25,18 +23,12 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [activeTab]);
 
-  useEffect(() => {
-    toggleAmbientSound(audioEnabled);
-  }, [audioEnabled]);
-
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingBottom: '56px' }}>
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleTabChange}
-        audioEnabled={audioEnabled}
-        setAudioEnabled={setAudioEnabled}
       />
 
       {/* Automatic Welcome & National Anthem Modal */}

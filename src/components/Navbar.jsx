@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Gita4YouthLogo from './Gita4YouthLogo';
-import { Flag, Compass, HelpCircle, Image, Flame, Volume2, VolumeX, Menu, X } from 'lucide-react';
+import { Flag, Compass, HelpCircle, Image, Flame, Menu, X } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudioEnabled }) {
+export default function Navbar({ activeTab, setActiveTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'quiz', label: 'Independence Quiz', icon: HelpCircle },
     { id: 'flag', label: 'Flag Hoisting', icon: Flag },
+    { id: 'quiz', label: 'Independence Quiz', icon: HelpCircle },
     { id: 'trail', label: 'Freedom Fighters', icon: Compass },
     { id: 'studio', label: 'Photo Frames', icon: Image },
     { id: 'tribute', label: 'Diya Tributes', icon: Flame },
@@ -32,7 +32,7 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
         width: '100%'
       }}>
         {/* Brand Logo */}
-        <div onClick={() => { setActiveTab('quiz'); setMobileMenuOpen(false); }} style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}>
+        <div onClick={() => { setActiveTab('flag'); setMobileMenuOpen(false); }} style={{ minHeight: '44px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
           <Gita4YouthLogo size="small" />
         </div>
 
@@ -68,35 +68,8 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
           })}
         </nav>
 
-        {/* Controls: Sound + Mobile Drawer Toggle */}
+        {/* Mobile Drawer Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button
-            onClick={() => setAudioEnabled(!audioEnabled)}
-            aria-label={audioEnabled ? "Mute sound" : "Enable sound"}
-            style={{
-              minHeight: '44px',
-              minWidth: '44px',
-              background: audioEnabled ? 'rgba(217, 119, 6, 0.18)' : 'rgba(255, 255, 255, 0.05)',
-              border: `1px solid ${audioEnabled ? '#D97706' : 'rgba(255, 255, 255, 0.15)'}`,
-              color: audioEnabled ? '#F59E0B' : '#94A3B8',
-              padding: '8px 12px',
-              borderRadius: '24px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              fontSize: '0.82rem',
-              fontWeight: '500'
-            }}
-          >
-            {audioEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            <span className="sm-inline" style={{ display: 'none' }}>
-              {audioEnabled ? 'Sound ON' : 'Sound OFF'}
-            </span>
-          </button>
-
-          {/* Hamburger Menu Toggle (Mobile) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Navigation Menu"
@@ -168,9 +141,6 @@ export default function Navbar({ activeTab, setActiveTab, audioEnabled, setAudio
         @media (min-width: 900px) {
           .md-flex { display: flex !important; }
           .md-hidden { display: none !important; }
-        }
-        @media (min-width: 640px) {
-          .sm-inline { display: inline !important; }
         }
       `}</style>
     </header>
