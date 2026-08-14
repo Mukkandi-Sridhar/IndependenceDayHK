@@ -1,4 +1,4 @@
-// Real Audio Recording + Web Audio Synthesizer for National Anthem (Jana Gana Mana)
+// Universal Audio Player for National Anthem (Jana Gana Mana) - MP3 + OGG support for iOS Safari & Android
 
 let realAnthemAudio = null;
 let audioCtx = null;
@@ -18,7 +18,7 @@ function getAudioContext() {
   return audioCtx;
 }
 
-// Play Authentic Real National Anthem Recording (Jana Gana Mana)
+// Play Authentic Universal MP3 National Anthem Recording (Jana Gana Mana)
 export function playAnthemSynth(onProgress) {
   try {
     if (realAnthemAudio) {
@@ -26,17 +26,23 @@ export function playAnthemSynth(onProgress) {
       realAnthemAudio.currentTime = 0;
     }
 
-    // Initialize Real Audio Player with authentic recording
-    realAnthemAudio = new Audio('/national-anthem.ogg');
+    // MP3 format is universally supported across 100% of mobile browsers (iOS Safari & Android)
+    realAnthemAudio = new Audio('/national-anthem.mp3');
     realAnthemAudio.volume = 1.0; // Full Sound
 
     const playPromise = realAnthemAudio.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
-        console.log("Playing Real National Anthem Audio at Full Volume!");
+        console.log("Playing Real Jana Gana Mana National Anthem MP3 at Full Volume!");
       }).catch(err => {
-        console.warn("Audio autoplay policy triggered, falling back to Web Audio Synth", err);
-        playFallbackSynth(onProgress);
+        console.warn("Retrying with OGG audio format...", err);
+        try {
+          realAnthemAudio = new Audio('/national-anthem.ogg');
+          realAnthemAudio.volume = 1.0;
+          realAnthemAudio.play().catch(synthErr => playFallbackSynth(onProgress));
+        } catch (e) {
+          playFallbackSynth(onProgress);
+        }
       });
     }
   } catch (e) {

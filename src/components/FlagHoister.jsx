@@ -115,13 +115,13 @@ export default function FlagHoister({ setActiveTab }) {
       {/* Main Flag Stage */}
       <div className="grid-mobile-single" style={{ gap: '20px' }}>
         
-        {/* GRAND REALISTIC WAVING FLAG DISPLAY STAGE */}
+        {/* GRAND REALISTIC WAVING FLAG DISPLAY STAGE (PERFECTLY CONTAINED) */}
         <div className="card-dharma" style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '410px',
+          minHeight: '380px',
           position: 'relative',
           overflow: 'hidden'
         }}>
@@ -142,27 +142,36 @@ export default function FlagHoister({ setActiveTab }) {
             </span>
           ))}
 
-          {/* Flag Pole Container */}
-          <div style={{ position: 'relative', width: '100%', height: '310px', display: 'flex', justifyContent: 'center' }}>
-            
+          {/* Steel Pole Container (Shifted Left so Flag stays 100% inside card) */}
+          <div style={{
+            position: 'absolute',
+            left: 'calc(50% - 68px)',
+            top: '12px',
+            bottom: '12px',
+            width: '2px',
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
             {/* Top Golden Finial Sphere */}
             <div style={{
               position: 'absolute',
               top: '0',
-              width: '20px',
-              height: '20px',
+              left: '-8px',
+              width: '18px',
+              height: '18px',
               borderRadius: '50%',
               background: '#F59E0B',
-              boxShadow: '0 0 12px #F59E0B',
+              boxShadow: '0 0 10px #F59E0B',
               zIndex: 3
             }} />
 
             {/* Pulley Wheel */}
             <div style={{
               position: 'absolute',
-              top: '10px',
-              width: '14px',
-              height: '14px',
+              top: '8px',
+              left: '-5px',
+              width: '12px',
+              height: '12px',
               borderRadius: '50%',
               border: '2px solid #F59E0B',
               zIndex: 3
@@ -171,44 +180,45 @@ export default function FlagHoister({ setActiveTab }) {
             {/* Steel Pole */}
             <div style={{
               position: 'absolute',
-              top: '12px',
-              width: '8px',
-              height: '285px',
+              top: '10px',
+              left: '-3px',
+              width: '7px',
+              height: '250px',
               background: 'linear-gradient(90deg, #94A3B8, #F1F5F9 50%, #64748B)',
-              borderRadius: '4px',
+              borderRadius: '3px',
               zIndex: 1
             }} />
 
             {/* Visible Pulley Ropes */}
             <div style={{
               position: 'absolute',
-              top: '20px',
-              left: 'calc(50% - 6px)',
+              top: '16px',
+              left: '-6px',
               width: '2px',
-              height: '270px',
+              height: '240px',
               background: 'rgba(245, 158, 11, 0.6)',
               zIndex: 2
             }} />
             <div style={{
               position: 'absolute',
-              top: '20px',
-              left: 'calc(50% + 4px)',
+              top: '16px',
+              left: '4px',
               width: '2px',
-              height: '270px',
+              height: '240px',
               background: 'rgba(245, 158, 11, 0.6)',
               zIndex: 2
             }} />
 
-            {/* GRAND REALISTIC WAVING TRICOLOR FLAG */}
+            {/* PERFECTLY CONTAINED TRICOLOR FLAG (135px x 81px) */}
             <div style={{
               position: 'absolute',
-              top: `${225 - (hoistPosition * 2.1)}px`,
-              left: 'calc(50% + 5px)',
-              width: '190px',
-              height: '114px',
+              top: `${190 - (hoistPosition * 1.75)}px`,
+              left: '4px',
+              width: '135px',
+              height: '81px',
               transition: 'top 0.1s linear',
               zIndex: 4,
-              filter: 'drop-shadow(2px 6px 14px rgba(0,0,0,0.65))'
+              filter: 'drop-shadow(2px 4px 10px rgba(0,0,0,0.65))'
             }}>
               {/* Waving Fabric Wrapper */}
               <div className="flag-wave-animated" style={{
@@ -216,9 +226,9 @@ export default function FlagHoister({ setActiveTab }) {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                borderRadius: '0 6px 6px 0',
+                borderRadius: '0 5px 5px 0',
                 overflow: 'hidden',
-                boxShadow: '4px 6px 18px rgba(0,0,0,0.6)',
+                boxShadow: '3px 4px 14px rgba(0,0,0,0.6)',
                 border: '1px solid rgba(255, 255, 255, 0.35)'
               }}>
                 <div style={{ flex: 1, background: '#D97706' }} />
@@ -229,7 +239,7 @@ export default function FlagHoister({ setActiveTab }) {
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <svg viewBox="0 0 40 40" width="34" height="34" className="animate-chakra-calm">
+                  <svg viewBox="0 0 40 40" width="25" height="25" className="animate-chakra-calm">
                     <circle cx="20" cy="20" r="18" fill="none" stroke="#1E1B4B" strokeWidth="1.6" />
                     <circle cx="20" cy="20" r="3.5" fill="#1E1B4B" />
                     {Array.from({ length: 24 }).map((_, i) => {
@@ -254,19 +264,19 @@ export default function FlagHoister({ setActiveTab }) {
               {/* Rope Ties to Pole */}
               <div style={{
                 position: 'absolute',
-                top: '4px',
-                left: '-6px',
-                width: '8px',
-                height: '8px',
+                top: '3px',
+                left: '-5px',
+                width: '6px',
+                height: '6px',
                 borderRadius: '50%',
                 background: '#F59E0B'
               }} />
               <div style={{
                 position: 'absolute',
-                bottom: '4px',
-                left: '-6px',
-                width: '8px',
-                height: '8px',
+                bottom: '3px',
+                left: '-5px',
+                width: '6px',
+                height: '6px',
                 borderRadius: '50%',
                 background: '#F59E0B'
               }} />
@@ -276,8 +286,9 @@ export default function FlagHoister({ setActiveTab }) {
             <div style={{
               position: 'absolute',
               bottom: '0',
-              width: '140px',
-              height: '18px',
+              left: '-55px',
+              width: '110px',
+              height: '14px',
               background: '#334155',
               borderRadius: '4px',
               zIndex: 3,
@@ -292,9 +303,9 @@ export default function FlagHoister({ setActiveTab }) {
                 onClick={handleHoist}
                 disabled={isHoisting}
                 className="btn-mobile-primary"
-                style={{ minHeight: '52px', fontSize: '1.05rem' }}
+                style={{ minHeight: '48px', fontSize: '1rem' }}
               >
-                <Flag size={22} />
+                <Flag size={20} />
                 <span>{isHoisting ? `Hoisting Flag (${hoistPosition}%)...` : 'Pull Rope to Hoist Flag 🇮🇳'}</span>
               </button>
             ) : (
@@ -302,11 +313,11 @@ export default function FlagHoister({ setActiveTab }) {
                 <button
                   onClick={handleGoToQuiz}
                   className="btn-mobile-primary"
-                  style={{ minHeight: '52px', fontSize: '1.05rem' }}
+                  style={{ minHeight: '48px', fontSize: '1rem' }}
                 >
-                  <HelpCircle size={22} />
+                  <HelpCircle size={20} />
                   <span>Now Take the Independence Quiz</span>
-                  <ArrowRight size={20} />
+                  <ArrowRight size={18} />
                 </button>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -385,11 +396,11 @@ export default function FlagHoister({ setActiveTab }) {
           <button
             onClick={handleGoToQuiz}
             className="btn-mobile-primary"
-            style={{ minHeight: '52px', fontSize: '1.05rem' }}
+            style={{ minHeight: '48px', fontSize: '1rem' }}
           >
-            <HelpCircle size={22} />
+            <HelpCircle size={20} />
             <span>Go to Independence Quiz</span>
-            <ArrowRight size={20} />
+            <ArrowRight size={18} />
           </button>
         </div>
 
