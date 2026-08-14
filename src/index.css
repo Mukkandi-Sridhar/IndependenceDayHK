@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Philosopher:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* High contrast, pristine Indian Flag color palette */
+  --saffron: #D97706;
+  --saffron-bright: #F59E0B;
+  --saffron-bg: rgba(217, 119, 6, 0.14);
+  --saffron-border: rgba(245, 158, 11, 0.35);
+
+  --white: #FFFFFF;
+  --cream: #FDFBF7;
+
+  --green: #15803D;
+  --green-bright: #22C55E;
+  --green-bg: rgba(21, 128, 61, 0.14);
+  --green-border: rgba(34, 197, 94, 0.35);
+
+  --navy-dark: #0B0F19;
+  --navy-card: rgba(15, 23, 42, 0.92);
+  --navy-chakra: #1E1B4B;
+
+  --gold: #F59E0B;
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Poppins', sans-serif;
+  --font-quote: 'Philosopher', serif;
+
+  --touch-target-min: 48px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-body);
+  background-color: var(--navy-dark);
+  color: var(--text-primary);
+  font-size: 16px; /* Prevents auto-zoom on mobile inputs */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(217, 119, 6, 0.4);
+  border-radius: 3px;
+}
+
+/* Typography */
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.5px;
+}
+
+.font-quote {
+  font-family: var(--font-quote);
+}
+
+.tricolor-gradient-text {
+  background: linear-gradient(135deg, #F59E0B 0%, #FFFFFF 50%, #22C55E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Touch Target Minimum (48px) */
+button, input, select, textarea, a {
+  min-height: var(--touch-target-min);
+  font-size: 16px;
+}
+
+/* Container Spacing for Mobile & Desktop */
+.container-mobile {
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 14px 84px; /* Generous bottom padding to clear mobile bottom navbar */
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .container-mobile {
+    padding: 24px 20px 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-mobile {
+    max-width: 1040px;
+    padding: 32px 24px 60px;
+  }
+}
+
+.grid-mobile-single {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 768px) {
+  .grid-mobile-single {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Cards */
+.card-dharma {
+  background: var(--navy-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--saffron-border);
+  border-radius: 16px;
+  padding: 20px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .card-dharma {
+    padding: 24px 20px;
+  }
+}
+
+/* Primary Mobile Action Buttons */
+.btn-mobile-primary {
+  min-height: 48px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.98rem;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.btn-mobile-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-mobile-secondary {
+  min-height: 48px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--saffron-border);
+  color: #F59E0B;
+  font-weight: 600;
+  font-size: 0.94rem;
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.btn-mobile-secondary:active {
+  transform: scale(0.98);
+  background: rgba(245, 158, 11, 0.15);
+}
+
+/* Sticky Bottom Action Bar */
+.sticky-bottom-bar {
+  position: fixed;
+  bottom: 54px; /* Sits above mobile bottom navbar */
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: rgba(11, 15, 25, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--saffron-border);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 900px) {
+  .sticky-bottom-bar {
+    bottom: 0;
+  }
+}
+
+/* Form Inputs */
+input[type="text"], input[type="tel"], input[type="number"], textarea, select {
+  font-size: 16px !important;
+  min-height: 48px;
+  border-radius: 10px;
+  background: rgba(7, 11, 21, 0.92);
+  border: 1px solid var(--saffron-border);
+  color: #FFFFFF;
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+}
+
+/* Restrained Badge */
+.dharma-badge {
+  background: var(--saffron-bg);
+  border: 1px solid var(--saffron-border);
+  color: #F59E0B;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Calm Dharmic Animations */
+@keyframes calmChakraRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-chakra-calm {
+  animation: calmChakraRotate 35s linear infinite;
+}
+
+@keyframes softFlameGlow {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+.animate-flame-calm {
+  animation: softFlameGlow 2.5s ease-in-out infinite;
+}
