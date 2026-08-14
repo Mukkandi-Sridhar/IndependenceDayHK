@@ -78,9 +78,14 @@ h1, h2, h3, h4, .font-heading {
   display: inline-block;
 }
 
-/* Touch Target Minimum (48px) */
-button, input, select, textarea, a {
+/* Touch Target Minimum (48px) for interactive form elements */
+button, input, select, textarea {
   min-height: var(--touch-target-min);
+  font-size: 16px;
+}
+
+/* Nav links and anchor touch targets */
+a {
   font-size: 16px;
 }
 

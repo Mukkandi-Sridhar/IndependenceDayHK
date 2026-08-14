@@ -16,6 +16,7 @@ import {
 
 // Firebase Configuration reading from Vercel Environment Variables with fallback
 const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "gita4youth-25579",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "gita4youth-25579.firebaseapp.com",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "gita4youth-25579.appspot.com",

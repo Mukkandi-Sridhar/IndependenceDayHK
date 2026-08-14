@@ -3,7 +3,7 @@ import { QUIZ_QUESTIONS } from '../data/quizData';
 import { playFanfare } from '../utils/audioSynth';
 import { dbService } from '../services/dbService';
 import confetti from 'canvas-confetti';
-import { HelpCircle, CheckCircle, XCircle, Trophy, RefreshCw, ArrowRight, Flame, User, Phone, MapPin, Check, Database } from 'lucide-react';
+import { HelpCircle, CheckCircle, XCircle, Trophy, RefreshCw, ArrowRight, Flame, User, Phone, MapPin, Check } from 'lucide-react';
 import Gita4YouthLogo from './Gita4YouthLogo';
 
 export default function QuizModule({ setActiveTab }) {

@@ -34,7 +34,7 @@ export default function MobileBottomNav({ activeTab, setActiveTab }) {
             key={tab.id}
             onClick={() => {
               setActiveTab(tab.id);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo({ top: 0, behavior: 'instant' });
             }}
             style={{
               flex: 1,

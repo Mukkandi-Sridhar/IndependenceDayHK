@@ -35,7 +35,7 @@ export default function Footer({ setActiveTab }) {
             {[
               { id: 'flag', label: 'Flag Hoist' },
               { id: 'trail', label: 'Freedom Trail' },
-              { id: 'quiz', label: 'Patriot Quiz' },
+              { id: 'quiz', label: 'Independence Quiz' },
               { id: 'studio', label: 'Tiranga Studio' },
               { id: 'tribute', label: 'Diya Wall' }
             ].map(item => (
