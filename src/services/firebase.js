@@ -99,3 +99,55 @@ export async function fetchQuizSubmissionsFromFirebase() {
     return [];
   }
 }
+
+// 5. ADMIN — Fetch ALL Quiz Submissions (no limit) from Firebase Firestore
+export async function fetchAllQuizSubmissionsAdmin() {
+  try {
+    const q = query(collection(db, COLLECTIONS.QUIZ_SUBMISSIONS), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    const results = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      results.push({
+        id: docSnap.id,
+        name: data.name || '',
+        phone: data.phone || '',
+        place: data.place || '',
+        isGita4YouthMember: data.isGita4YouthMember || 'No',
+        score: data.score ?? 0,
+        totalQuestions: data.totalQuestions ?? 20,
+        badge: data.badge || '',
+        dateStr: data.dateStr || '',
+        createdAt: data.createdAt?.toDate?.()?.toLocaleString('en-IN') || data.dateStr || 'N/A'
+      });
+    });
+    return results;
+  } catch (error) {
+    console.error("Admin Fetch Quiz Submissions Error:", error);
+    return [];
+  }
+}
+
+// 6. ADMIN — Fetch ALL Tributes (no limit) from Firebase Firestore
+export async function fetchAllTributesAdmin() {
+  try {
+    const q = query(collection(db, COLLECTIONS.TRIBUTES), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    const results = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      results.push({
+        id: docSnap.id,
+        name: data.name || '',
+        location: data.location || '',
+        message: data.message || '',
+        dateStr: data.dateStr || '',
+        createdAt: data.createdAt?.toDate?.()?.toLocaleString('en-IN') || data.dateStr || 'N/A'
+      });
+    });
+    return results;
+  } catch (error) {
+    console.error("Admin Fetch Tributes Error:", error);
+    return [];
+  }
+}
