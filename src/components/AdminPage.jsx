@@ -3,7 +3,8 @@ import { fetchAllQuizSubmissionsAdmin, fetchAllTributesAdmin } from '../services
 import { jsPDF } from 'jspdf';
 import {
   LayoutDashboard, Users, Flame, RefreshCw, Download,
-  Trophy, Check, X, Clock, Star, Search, ChevronDown, ChevronUp
+  Trophy, Check, X, Clock, Star, Search, ChevronDown, ChevronUp,
+  Filter, CheckSquare, Square
 } from 'lucide-react';
 
 /* ─── Palette ─────────────────────────────────────────────────────── */
@@ -22,6 +23,48 @@ const C = {
   dim: '#64748B',
 };
 
+/* ─── Deduplication Helpers ───────────────────────────────────────── */
+export function deduplicateQuizRows(rows) {
+  const map = new Map();
+  rows.forEach(r => {
+    // Normalize phone number (extract last 10 digits)
+    const normPhone = (r.phone || '').replace(/\D/g, '').slice(-10);
+    const normName = (r.name || '').trim().toLowerCase();
+    const normPlace = (r.place || '').trim().toLowerCase();
+
+    // Unique key: Phone if 10 digits available, else Name + Place
+    const key = normPhone.length >= 10 ? `p_${normPhone}` : `n_${normName}_${normPlace}`;
+
+    if (!map.has(key)) {
+      map.set(key, r);
+    } else {
+      const existing = map.get(key);
+      // Keep entry with higher score; if scores equal, keep most recent
+      if (r.score > existing.score) {
+        map.set(key, r);
+      } else if (r.score === existing.score) {
+        const tNew = new Date(r.createdAt || r.dateStr || 0).getTime();
+        const tOld = new Date(existing.createdAt || existing.dateStr || 0).getTime();
+        if (tNew >= tOld) {
+          map.set(key, r);
+        }
+      }
+    }
+  });
+  return Array.from(map.values());
+}
+
+export function deduplicateTributeRows(rows) {
+  const map = new Map();
+  rows.forEach(r => {
+    const key = `${(r.name || '').trim().toLowerCase()}_${(r.message || '').trim().toLowerCase()}`;
+    if (!map.has(key)) {
+      map.set(key, r);
+    }
+  });
+  return Array.from(map.values());
+}
+
 /* ─── Tiny helpers ─────────────────────────────────────────────────── */
 const Badge = ({ label, color = C.saffron, bg }) => (
   <span style={{
@@ -37,7 +80,7 @@ const Badge = ({ label, color = C.saffron, bg }) => (
   }}>{label}</span>
 );
 
-const Stat = ({ icon, label, value, color = C.saffron }) => (
+const Stat = ({ icon, label, value, color = C.saffron, subtext }) => (
   <div style={{
     flex: '1 1 160px',
     background: C.card,
@@ -60,6 +103,7 @@ const Stat = ({ icon, label, value, color = C.saffron }) => (
     <div>
       <p style={{ color: C.muted, fontSize: '0.76rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</p>
       <p style={{ color, fontSize: '1.8rem', fontWeight: 800, lineHeight: 1.1 }}>{value}</p>
+      {subtext && <p style={{ color: C.dim, fontSize: '0.7rem', marginTop: 2 }}>{subtext}</p>}
     </div>
   </div>
 );
@@ -72,13 +116,12 @@ function scoreColor(score, total) {
   return C.red;
 }
 
-/* ─── PDF Export ──────────────────────────────────────────────────── */
-function exportQuizPDF(rows) {
+/* ─── PDF Export (Deduplicated) ────────────────────────────────────── */
+function exportQuizPDF(rows, isDeduplicated) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
   const marginL = 36, marginR = 36;
-  const colW = (pageW - marginL - marginR) / 8;
 
   // Header bar
   doc.setFillColor(11, 15, 25);
@@ -88,11 +131,14 @@ function exportQuizPDF(rows) {
   doc.setFont('helvetica', 'bold');
   doc.text('GITA4YOUTH', marginL, 32);
   doc.setTextColor(255, 255, 255);
-  doc.text('  |  Quiz Submissions Report', marginL + 90, 32);
+  doc.text('  |  Quiz Submissions Report', marginL + 95, 32);
   doc.setFontSize(8);
   doc.setTextColor(148, 163, 184);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Generated: ${new Date().toLocaleString('en-IN')}  •  Total Records: ${rows.length}`, marginL, 46);
+  doc.text(
+    `Generated: ${new Date().toLocaleString('en-IN')}  •  ${isDeduplicated ? 'Unique Candidates (No Duplicates)' : 'All Raw Submissions'}  •  Total Records: ${rows.length}`,
+    marginL, 46
+  );
 
   const headers = ['#', 'Name', 'Phone', 'Place', 'Gita4Youth', 'Score', 'Badge', 'Date'];
   const colWidths = [28, 110, 90, 100, 70, 48, 120, 90];
@@ -148,9 +194,11 @@ function exportQuizPDF(rows) {
     const pct = row.score / (row.totalQuestions * 10);
     const bx = marginL + colWidths.slice(0, 5).reduce((a, b) => a + b, 0) + 2;
     const barW = (colWidths[5] - 6) * pct;
-    doc.setFillColor(pct >= 0.8 ? 34 : pct >= 0.5 ? 245 : 248,
+    doc.setFillColor(
+      pct >= 0.8 ? 34 : pct >= 0.5 ? 245 : 248,
       pct >= 0.8 ? 197 : pct >= 0.5 ? 158 : 113,
-      pct >= 0.8 ? 94 : pct >= 0.5 ? 11 : 113);
+      pct >= 0.8 ? 94 : pct >= 0.5 ? 11 : 113
+    );
     doc.rect(bx, y + 2, barW, 2, 'F');
 
     y += 16;
@@ -164,13 +212,16 @@ function exportQuizPDF(rows) {
     doc.rect(0, pageH - 24, pageW, 24, 'F');
     doc.setFontSize(7.5);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Gita4Youth • Azadi Quiz Admin Report  •  Page ${i} of ${totalPages}`, marginL, pageH - 9);
+    doc.text(
+      `Gita4Youth • Azadi Quiz Admin Report ${isDeduplicated ? '(Deduplicated)' : ''}  •  Page ${i} of ${totalPages}`,
+      marginL, pageH - 9
+    );
   }
 
-  doc.save(`Gita4Youth_Quiz_Submissions_${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save(`Gita4Youth_Quiz_Submissions_${isDeduplicated ? 'NoDuplicates_' : ''}${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 
-function exportTributesPDF(rows) {
+function exportTributesPDF(rows, isDeduplicated) {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -183,11 +234,14 @@ function exportTributesPDF(rows) {
   doc.setFont('helvetica', 'bold');
   doc.text('GITA4YOUTH', marginL, 32);
   doc.setTextColor(255, 255, 255);
-  doc.text('  |  Diya Tributes Report', marginL + 90, 32);
+  doc.text('  |  Diya Tributes Report', marginL + 95, 32);
   doc.setFontSize(8);
   doc.setTextColor(148, 163, 184);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Generated: ${new Date().toLocaleString('en-IN')}  •  Total Records: ${rows.length}`, marginL, 46);
+  doc.text(
+    `Generated: ${new Date().toLocaleString('en-IN')}  •  ${isDeduplicated ? 'Unique Tributes (No Duplicates)' : 'All Tributes'}  •  Total Records: ${rows.length}`,
+    marginL, 46
+  );
 
   let y = 72;
   rows.forEach((row, idx) => {
@@ -221,33 +275,64 @@ function exportTributesPDF(rows) {
     doc.text(`Gita4Youth • Diya Tribute Wall Admin Report  •  Page ${i} of ${totalPages}`, marginL, pageH - 9);
   }
 
-  doc.save(`Gita4Youth_Tributes_${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save(`Gita4Youth_Tributes_${isDeduplicated ? 'NoDuplicates_' : ''}${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 
 /* ─── Section header ─────────────────────────────────────────────── */
-const SectionHeader = ({ icon, title, count, onExport, onRefresh, loading, children }) => (
-  <div style={{
-    display: 'flex', alignItems: 'center', flexWrap: 'wrap',
-    gap: 10, marginBottom: 14
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-      {icon}
-      <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: C.text }}>{title}</h2>
-      <Badge label={`${count} records`} color={C.saffron} />
+const SectionHeader = ({ icon, title, count, rawCount, deduplicate, setDeduplicate, onExport, onRefresh, loading, children }) => {
+  const filteredDuplicatesCount = rawCount - count;
+
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', flexWrap: 'wrap',
+      gap: 10, marginBottom: 14
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, flexWrap: 'wrap' }}>
+        {icon}
+        <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: C.text }}>{title}</h2>
+        <Badge label={`${count} ${deduplicate ? 'unique records' : 'total records'}`} color={C.saffron} />
+        
+        {/* Deduplicate Checkbox Toggle */}
+        <button
+          onClick={() => setDeduplicate(!deduplicate)}
+          title="Toggle duplicate filtering"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: '16px',
+            border: deduplicate ? `1px solid ${C.green}` : `1px solid ${C.dim}`,
+            background: deduplicate ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255,255,255,0.04)',
+            color: deduplicate ? C.green : C.muted,
+            fontSize: '0.76rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {deduplicate ? <CheckSquare size={14} color={C.green} /> : <Square size={14} color={C.muted} />}
+          <span>{deduplicate ? 'Filter Duplicates ON' : 'Show All Duplicates'}</span>
+          {deduplicate && filteredDuplicatesCount > 0 && (
+            <span style={{ fontSize: '0.7rem', opacity: 0.85 }}>({filteredDuplicatesCount} hidden)</span>
+          )}
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        {children}
+        <button onClick={onRefresh} disabled={loading} title="Refresh Data" style={btnStyle('#3B4A6B', '#CBD5E1')}>
+          <RefreshCw size={15} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+          <span>Refresh</span>
+        </button>
+        <button onClick={onExport} title="Export Clean PDF without duplicates" style={btnStyle('#D97706', '#FFF')}>
+          <Download size={15} />
+          <span>Export PDF {deduplicate ? '(No Duplicates)' : ''}</span>
+        </button>
+      </div>
     </div>
-    <div style={{ display: 'flex', gap: 8 }}>
-      {children}
-      <button onClick={onRefresh} disabled={loading} title="Refresh" style={btnStyle('#3B4A6B', '#CBD5E1')}>
-        <RefreshCw size={15} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
-        <span>Refresh</span>
-      </button>
-      <button onClick={onExport} title="Export PDF" style={btnStyle('#D97706', '#FFF')}>
-        <Download size={15} />
-        <span>Export PDF</span>
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 const btnStyle = (bg, color) => ({
   display: 'flex', alignItems: 'center', gap: 6,
@@ -294,7 +379,7 @@ const Td = ({ children, style = {} }) => (
   }}>{children}</td>
 );
 
-/* ─── Main AdminPage ──────────────────────────────────────────────── */
+/* ─── Main AdminPage Component ────────────────────────────────────── */
 export default function AdminPage() {
   const [tab, setTab] = useState('quiz');
   const [quizRows, setQuizRows] = useState([]);
@@ -304,6 +389,7 @@ export default function AdminPage() {
   const [tributeSearch, setTributeSearch] = useState('');
   const [sortKey, setSortKey] = useState('createdAt');
   const [sortAsc, setSortAsc] = useState(false);
+  const [deduplicate, setDeduplicate] = useState(true); // Default to ON for clean PDF & display
   const [error, setError] = useState('');
   const [authPassed, setAuthPassed] = useState(false);
   const [pwInput, setPwInput] = useState('');
@@ -392,26 +478,31 @@ export default function AdminPage() {
     else { setSortKey(key); setSortAsc(false); }
   };
 
+  // 1. Prepared Quiz Rows (Deduplicated or Raw)
+  const activeQuizBase = deduplicate ? deduplicateQuizRows(quizRows) : quizRows;
   const filteredQuiz = applySort(
-    quizRows.filter(r =>
+    activeQuizBase.filter(r =>
       [r.name, r.phone, r.place, r.badge, r.isGita4YouthMember]
         .join(' ').toLowerCase().includes(quizSearch.toLowerCase())
     ),
     sortKey, sortAsc
   );
 
+  // 2. Prepared Tribute Rows (Deduplicated or Raw)
+  const activeTributeBase = deduplicate ? deduplicateTributeRows(tributeRows) : tributeRows;
   const filteredTributes = applySort(
-    tributeRows.filter(r =>
+    activeTributeBase.filter(r =>
       [r.name, r.location, r.message].join(' ').toLowerCase().includes(tributeSearch.toLowerCase())
     ),
     sortKey, sortAsc
   );
 
-  // Stats
-  const totalScore = quizRows.reduce((a, r) => a + (r.score || 0), 0);
-  const avgScore = quizRows.length ? Math.round(totalScore / quizRows.length) : 0;
-  const heroCount = quizRows.filter(r => r.score >= 160).length;
-  const memberCount = quizRows.filter(r => r.isGita4YouthMember === 'Yes').length;
+  // Stats (Calculated on deduplicated active entries)
+  const uniqueCandidateCount = deduplicateQuizRows(quizRows).length;
+  const totalScore = activeQuizBase.reduce((a, r) => a + (r.score || 0), 0);
+  const avgScore = activeQuizBase.length ? Math.round(totalScore / activeQuizBase.length) : 0;
+  const heroCount = activeQuizBase.filter(r => r.score >= 160).length;
+  const memberCount = activeQuizBase.filter(r => r.isGita4YouthMember === 'Yes').length;
 
   /* ── Render ── */
   return (
@@ -447,7 +538,7 @@ export default function AdminPage() {
 
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '28px 20px 60px' }}>
 
-        {/* Error */}
+        {/* Error Notification */}
         {error && (
           <div style={{
             background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.4)',
@@ -458,31 +549,59 @@ export default function AdminPage() {
 
         {/* Stats Row */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 28 }}>
-          <Stat icon={<Users size={22} color={C.saffron} />} label="Total Participants" value={quizRows.length} color={C.saffron} />
+          <Stat
+            icon={<Users size={22} color={C.saffron} />}
+            label="Unique Candidates"
+            value={uniqueCandidateCount}
+            color={C.saffron}
+            subtext={quizRows.length > uniqueCandidateCount ? `${quizRows.length} raw total submissions` : undefined}
+          />
           <Stat icon={<Trophy size={22} color={C.green} />} label="Freedom Heroes (≥160)" value={heroCount} color={C.green} />
           <Stat icon={<Star size={22} color={C.blue} />} label="Avg Score" value={avgScore} color={C.blue} />
           <Stat icon={<Check size={22} color="#A78BFA" />} label="Gita4Youth Members" value={memberCount} color="#A78BFA" />
-          <Stat icon={<Flame size={22} color={C.red} />} label="Diya Tributes" value={tributeRows.length} color={C.red} />
+          <Stat icon={<Flame size={22} color={C.red} />} label="Diya Tributes" value={deduplicateTributeRows(tributeRows).length} color={C.red} />
         </div>
 
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-          {[
-            { key: 'quiz', label: 'Quiz Submissions', icon: <Trophy size={16} /> },
-            { key: 'tributes', label: 'Diya Tributes', icon: <Flame size={16} /> }
-          ].map(t => (
+        {/* Tabs & Deduplication Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 20 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {[
+              { key: 'quiz', label: 'Quiz Submissions', icon: <Trophy size={16} /> },
+              { key: 'tributes', label: 'Diya Tributes', icon: <Flame size={16} /> }
+            ].map(t => (
+              <button
+                key={t.key}
+                onClick={() => { setTab(t.key); setSortKey('createdAt'); setSortAsc(false); }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 7,
+                  padding: '9px 18px', borderRadius: 10, border: 'none',
+                  background: tab === t.key ? 'linear-gradient(135deg,#D97706,#B45309)' : 'rgba(255,255,255,0.05)',
+                  color: tab === t.key ? '#FFF' : C.muted,
+                  fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer'
+                }}
+              >{t.icon}{t.label}</button>
+            ))}
+          </div>
+
+          {/* Quick Deduplication State Indicator */}
+          <div style={{ fontSize: '0.8rem', color: C.muted, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>Duplicate Filter:</span>
             <button
-              key={t.key}
-              onClick={() => { setTab(t.key); setSortKey('createdAt'); setSortAsc(false); }}
+              onClick={() => setDeduplicate(!deduplicate)}
               style={{
-                display: 'flex', alignItems: 'center', gap: 7,
-                padding: '9px 18px', borderRadius: 10, border: 'none',
-                background: tab === t.key ? 'linear-gradient(135deg,#D97706,#B45309)' : 'rgba(255,255,255,0.05)',
-                color: tab === t.key ? '#FFF' : C.muted,
-                fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer'
+                background: deduplicate ? 'rgba(34, 197, 94, 0.18)' : 'rgba(239, 68, 68, 0.18)',
+                border: deduplicate ? `1px solid ${C.green}` : `1px solid ${C.red}`,
+                color: deduplicate ? C.green : C.red,
+                padding: '4px 12px',
+                borderRadius: '12px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer'
               }}
-            >{t.icon}{t.label}</button>
-          ))}
+            >
+              {deduplicate ? '✅ ON (Unique Entries Only)' : '⚠️ OFF (Showing All Raw Records)'}
+            </button>
+          </div>
         </div>
 
         {/* ── QUIZ TABLE ── */}
@@ -493,7 +612,10 @@ export default function AdminPage() {
                 icon={<Trophy size={18} color={C.saffron} />}
                 title="Quiz Submissions"
                 count={filteredQuiz.length}
-                onExport={() => exportQuizPDF(filteredQuiz)}
+                rawCount={quizRows.length}
+                deduplicate={deduplicate}
+                setDeduplicate={setDeduplicate}
+                onExport={() => exportQuizPDF(filteredQuiz, deduplicate)}
                 onRefresh={load}
                 loading={loading}
               >
@@ -503,7 +625,7 @@ export default function AdminPage() {
                   <input
                     value={quizSearch}
                     onChange={e => setQuizSearch(e.target.value)}
-                    placeholder="Search name, place, badge…"
+                    placeholder="Search name, phone, place..."
                     style={{
                       paddingLeft: 32, paddingRight: 12, height: 36,
                       borderRadius: 8, border: `1px solid ${C.border}`,
@@ -594,7 +716,9 @@ export default function AdminPage() {
               display: 'flex', justifyContent: 'space-between',
               color: C.dim, fontSize: '0.78rem', flexWrap: 'wrap', gap: 6
             }}>
-              <span>Showing {filteredQuiz.length} of {quizRows.length} records</span>
+              <span>
+                Showing <strong>{filteredQuiz.length}</strong> {deduplicate ? 'unique candidates' : 'entries'} (Total in DB: {quizRows.length})
+              </span>
               <span>Total Score: <strong style={{ color: C.saffron }}>{totalScore}</strong> • Avg: <strong style={{ color: C.saffron }}>{avgScore} pts</strong></span>
             </div>
           </div>
@@ -608,7 +732,10 @@ export default function AdminPage() {
                 icon={<Flame size={18} color={C.red} />}
                 title="Diya Tributes"
                 count={filteredTributes.length}
-                onExport={() => exportTributesPDF(filteredTributes)}
+                rawCount={tributeRows.length}
+                deduplicate={deduplicate}
+                setDeduplicate={setDeduplicate}
+                onExport={() => exportTributesPDF(filteredTributes, deduplicate)}
                 onRefresh={load}
                 loading={loading}
               >
@@ -617,7 +744,7 @@ export default function AdminPage() {
                   <input
                     value={tributeSearch}
                     onChange={e => setTributeSearch(e.target.value)}
-                    placeholder="Search name, location…"
+                    placeholder="Search name, location..."
                     style={{
                       paddingLeft: 32, paddingRight: 12, height: 36,
                       borderRadius: 8, border: `1px solid ${C.border}`,
